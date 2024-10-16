@@ -59,7 +59,7 @@ const ResetPassword: FC<ResetPasswordProps> = ({ setActiveState, token }) => {
       setActiveState('Login');
       navigate('/');
     } catch (error: any) {
-      setResetPasswordError('resrt password error' + error.message);
+      setResetPasswordError('reset password error' + error.message);
 
       console.log('GraphQL Errors:', error.graphQLErrors[0].message);
     }
