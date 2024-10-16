@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import React, { useEffect } from 'react';
-import { LOGOUT_USER } from '../../graphql/mutations/Logout';
+import { LOGOUT_USER } from '../../graphql/mutations/Auth/Logout';
 import { useAppDispatch } from '../../redux/hooks';
 import { logout } from '../../redux/slices/AuthSlice';
 

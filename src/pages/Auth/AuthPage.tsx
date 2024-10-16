@@ -29,7 +29,7 @@ function useVerifyCode() {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const code = params.get('verify');
+    const code = params.get('token');
     if (code) {
       setVerifyCode(code);
     }

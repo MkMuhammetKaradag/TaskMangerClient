@@ -16,7 +16,7 @@ interface ReduxProviderProps {
 }
 
 const ReduxProvider: React.FC<ReduxProviderProps> = ({ children }) => {
-  const { data, loading, error } = useQuery(GET_ME);
+  const { data, loading } = useQuery(GET_ME);
   const [showLoading, setShowLoading] = useState(true);
 
   useEffect(() => {
@@ -27,12 +27,10 @@ const ReduxProvider: React.FC<ReduxProviderProps> = ({ children }) => {
   }, [loading]);
 
   const store = useMemo(() => {
-    const reducer = {
-      auth: AuthReducer,
-    };
-
     return configureStore({
-      reducer: reducer,
+      reducer: {
+        auth: AuthReducer,
+      },
       preloadedState: {
         auth: {
           user: data?.getMe || null,
@@ -41,7 +39,7 @@ const ReduxProvider: React.FC<ReduxProviderProps> = ({ children }) => {
         },
       },
     });
-  }, [data, loading, error]);
+  }, [data, loading]);
 
   if (loading || showLoading) {
     return <Loading />;

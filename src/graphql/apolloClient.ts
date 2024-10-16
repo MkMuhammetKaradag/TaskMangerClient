@@ -21,10 +21,11 @@ const httpLink = new HttpLink({
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    graphQLErrors.map(({ message, locations, path }) => {
+    graphQLErrors.map(({ message, locations, path, extensions }) => {
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
+      // console.log(extensions);
     });
 
     if (networkError) {
@@ -41,8 +42,8 @@ const splitLink = split(
       definition.operation === 'subscription'
     );
   },
-  wsLink, // Subscription işlemleri için WebSocket bağlantısı
-  ApolloLink.from([errorLink, httpLink]) // Diğer tüm işlemler için HTTP bağlantısı
+  wsLink, 
+  ApolloLink.from([errorLink, httpLink]) 
 );
 
 const cache = new InMemoryCache({
