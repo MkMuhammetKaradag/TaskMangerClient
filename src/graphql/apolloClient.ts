@@ -37,8 +37,10 @@ const splitLink = split(
       definition.operation === 'subscription'
     );
   },
-  wsLink,
-  ApolloLink.from([errorLink, httpLink])
+  httpLink,
+  wsLink
+
+  // ApolloLink.from([errorLink, httpLink])
 );
 
 const cache = new InMemoryCache({

@@ -1,8 +1,18 @@
+import { ApolloProvider } from '@apollo/client';
+import client from './graphql/apolloClient';
+import { BrowserRouter } from 'react-router-dom';
+import Router from './Router';
+import ReduxProvider from './redux/ReduxProvider';
+
 const App = () => {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </div>
+    <ApolloProvider client={client}>
+      <ReduxProvider>
+        <BrowserRouter>
+          <Router></Router>
+        </BrowserRouter>
+      </ReduxProvider>
+    </ApolloProvider>
   );
 };
 
