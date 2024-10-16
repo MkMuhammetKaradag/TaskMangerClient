@@ -17,6 +17,15 @@ interface ReduxProviderProps {
 
 const ReduxProvider: React.FC<ReduxProviderProps> = ({ children }) => {
   const { data, loading, error } = useQuery(GET_ME);
+  const [showLoading, setShowLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [loading]);
+
   const store = useMemo(() => {
     const reducer = {
       auth: AuthReducer,
@@ -34,7 +43,7 @@ const ReduxProvider: React.FC<ReduxProviderProps> = ({ children }) => {
     });
   }, [data, loading, error]);
 
-  if (loading) {
+  if (loading || showLoading) {
     return <Loading />;
   }
 

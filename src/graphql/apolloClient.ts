@@ -13,6 +13,10 @@ const wsLink = new WebSocketLink({
 });
 const httpLink = new HttpLink({
   uri: 'http://localhost:3000/graphql',
+  credentials: 'include',
+  headers: {
+    'apollo-require-preflight': 'true',
+  },
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -37,10 +41,8 @@ const splitLink = split(
       definition.operation === 'subscription'
     );
   },
-  httpLink,
-  wsLink
-
-  // ApolloLink.from([errorLink, httpLink])
+  wsLink, // Subscription işlemleri için WebSocket bağlantısı
+  ApolloLink.from([errorLink, httpLink]) // Diğer tüm işlemler için HTTP bağlantısı
 );
 
 const cache = new InMemoryCache({
