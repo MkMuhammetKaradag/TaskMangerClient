@@ -2,16 +2,28 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from '../../pages/App/HomePage';
 import RoleBasedRoute from './RoleBasedRoute';
 import TasksPage from '../../pages/App/TasksPage';
+import ProjectsPage from '../../pages/App/ProjectsPage';
+import ProjectPage from '../../pages/App/ProjectPage';
 
 const AppNavigator = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route
-        path="/task"
+        path="/project/:projectId"
         element={
           <RoleBasedRoute
-            element={<TasksPage />}
+            element={<ProjectPage />}
+            allowedRoles={['WORKER', 'ADMIN']}
+          />
+        }
+      />
+
+      <Route
+        path="/projects"
+        element={
+          <RoleBasedRoute
+            element={<ProjectsPage />}
             allowedRoles={['WORKER', 'ADMIN']}
           />
         }
