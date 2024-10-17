@@ -5,4 +5,5 @@ export interface User {
   userName: string;
   email: string;
   profilePhoto: string;
+  roles: string[];
 }
