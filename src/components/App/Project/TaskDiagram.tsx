@@ -60,7 +60,7 @@ const CustomProjectNode: React.FC<{
   <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
     <h1>{title}</h1>
 
-    <Handle type="target" position={Position.Top} />
+    {/* <Handle type="target" position={Position.Top} /> */}
     <Handle type="source" position={Position.Bottom} />
   </div>
 );
@@ -109,11 +109,11 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
       target: task._id,
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        width: 20,
-        height: 20,
+        width: 10,
+        height: 10,
         color: getTaskStatusColor(task.status),
       },
-      style: { stroke: getTaskStatusColor(task.status) },
+      style: { stroke: getTaskStatusColor(task.status), strokeWidth: 4 },
     }));
 
     setNodes([projectNode, ...taskNodes]);
