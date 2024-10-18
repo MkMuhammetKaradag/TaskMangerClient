@@ -73,6 +73,74 @@ const nodeTypes: NodeTypes = {
 interface TaskDiagramProps {
   tasks: Task[];
 }
+interface TreeNode extends Task {
+  children: TreeNode[];
+}
+
+function buildTaskTree(tasks: Task[]): TreeNode[] {
+  const taskMap: Record<string, TreeNode> = {};
+  const roots: TreeNode[] = [];
+
+  // First pass: create TreeNode objects
+  tasks.forEach((task) => {
+    taskMap[task._id] = { ...task, children: [] };
+  });
+
+  // Second pass: build the tree structure
+  tasks.forEach((task) => {
+    if (task.parentTask) {
+      const parent = taskMap[task.parentTask._id];
+      if (parent) {
+        parent.children.push(taskMap[task._id]);
+      }
+    } else {
+      roots.push(taskMap[task._id]);
+    }
+  });
+
+  return roots;
+}
+function createNodes(tree: TreeNode[], x = 0, y = 100, level = 0): Node[] {
+  let nodes: Node[] = [];
+  const HORIZONTAL_SPACING = 300;
+  const VERTICAL_SPACING = 200;
+  if (y == 100) {
+    x = tree.length * -123;
+  }
+
+  tree.forEach((task, index) => {
+    const node: Node = {
+      id: task._id,
+      type: 'customTaskNode',
+      position: {
+        x: x + index * HORIZONTAL_SPACING,
+        y: y + level * VERTICAL_SPACING,
+      },
+      data: { title: task.title, task: task },
+    };
+    nodes.push(node);
+
+    if (task.children.length > 0) {
+      const childNodes = createNodes(
+        task.children,
+        x +
+          index * HORIZONTAL_SPACING -
+          ((task.children.length - 1) * HORIZONTAL_SPACING) / 2,
+        y + VERTICAL_SPACING,
+        level + 1
+      );
+      nodes = nodes.concat(childNodes);
+    }
+  });
+
+  return nodes;
+}
+
+function generateHierarchicalTaskNodes(tasks: Task[]): Node[] {
+  const taskTree = buildTaskTree(tasks);
+
+  return createNodes(taskTree);
+}
 
 const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -96,12 +164,7 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
       data: { title: 'Project' },
     };
 
-    const taskNodes: Node[] = tasks.map((task, index) => ({
-      id: task._id,
-      type: 'customTaskNode',
-      position: { x: 100 + index * 300, y: 100 + index * 100 },
-      data: { title: task.title, task: task },
-    }));
+    const taskNodes: Node[] = generateHierarchicalTaskNodes(tasks);
 
     const taskEdges: Edge[] = tasks.map((task) => ({
       id: `e${task._id}-${task.parentTask?._id || 'project'}`,
