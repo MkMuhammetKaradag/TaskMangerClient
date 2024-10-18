@@ -16,6 +16,7 @@ import {
   getTaskStatusColor,
   getTaskStatusText,
 } from '../../utils/status';
+import TaskDiagram from '../../components/App/Project/TaskDiagram';
 
 interface ProjectTasksQueryResult {
   getAllTasksByProject: Task[];
@@ -91,14 +92,6 @@ const Project = () => {
   });
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const projectRef = useRef<HTMLDivElement>(null);
-  const divRef = useRef<HTMLDivElement>(null);
-  const [bounds, setBounds] = useState({
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-  });
 
   useEffect(() => {
     if (data) {
@@ -106,58 +99,53 @@ const Project = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    if (divRef.current) {
-      const { offsetWidth, offsetHeight } = divRef.current;
-      console.log('Width:', offsetWidth, 'Height:', offsetHeight);
-    } else {
-      console.error('divRef.current is null');
-    }
-  }, []);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div ref={divRef} className="p-5 h-screen overflow-auto">
+    <div className="p-5 h-screen overflow-auto">
       <h1>Project Tasks</h1>
-      <div
-        className="relative  border-2 border-blue-500"
-        style={{
-          height: '90vh',
-          minHeight: '400px',
-          minWidth: '600px',
-          width: '100%',
-        }}
-      >
-        <Xwrapper>
-          <Draggable
-          
-            nodeRef={projectRef}
-            bounds={'parent'}
-            defaultPosition={{ x: 20, y: 20 }}
-          >
-            <div
-              ref={projectRef}
-              id="project"
-              className="absolute cursor-move border p-3 rounded-md bg-gray-200 border-black shadow-md"
+      <div>
+        {/* <div
+          ref={divRef}
+          style={{
+            height: '90vh',
+            minHeight: '400px',
+            minWidth: '600px',
+            width: '100%',
+          }}
+          className="relative  zoomable  border-2 border-blue-500"
+        >
+          <Xwrapper>
+            <Draggable
+              nodeRef={projectRef}
+              bounds={'parent'}
+              defaultPosition={{ x: 20, y: 20 }}
             >
-              Project
-            </div>
-          </Draggable>
-          {tasks.map((task, index) => (
-            <React.Fragment key={task._id}>
-              <DraggableBox index={index} task={task} bounds={bounds} />
-              <Xarrow
-                color={getTaskStatusColor(task.status)}
-                headSize={3}
-                strokeWidth={3}
-                start={task._id}
-                end={task.parentTask?._id || 'project'}
-              />
-            </React.Fragment>
-          ))}
-        </Xwrapper>
+              <div
+                ref={projectRef}
+                id="project"
+                className="absolute cursor-move border p-3 rounded-md bg-gray-200 border-black shadow-md"
+              >
+                Project
+              </div>
+            </Draggable>
+            {tasks.map((task, index) => (
+              <React.Fragment key={task._id}>
+                <DraggableBox index={index} task={task} bounds={bounds} />
+                <Xarrow
+                  color={getTaskStatusColor(task.status)}
+                  headSize={3}
+                  strokeWidth={3}
+                  start={task._id}
+                  end={task.parentTask?._id || 'project'}
+                />
+              </React.Fragment>
+            ))}
+          </Xwrapper>
+        </div> */}
+        <TaskDiagram tasks={tasks}></TaskDiagram>
       </div>
     </div>
   );
