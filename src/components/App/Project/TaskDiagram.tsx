@@ -97,45 +97,65 @@ function buildTaskTree(tasks: Task[]): TreeNode[] {
       roots.push(taskMap[task._id]);
     }
   });
-
   return roots;
 }
+function calculateSubtreeWidth(node: TreeNode, spacing: number): number {
+  // Eğer düğümün çocuğu yoksa, minimum genişliği döndür
+  if (node.children.length === 0) {
+    return spacing;
+  }
+
+  // Çocuk düğümlerin toplam genişliğini hesapla
+  return node.children
+    .map((child) => calculateSubtreeWidth(child, spacing))
+    .reduce((a, b) => a + b, 0);
+}
+
 function createNodes(tree: TreeNode[], x = 0, y = 100, level = 0): Node[] {
   let nodes: Node[] = [];
   const HORIZONTAL_SPACING = 300;
   const VERTICAL_SPACING = 200;
-  if (y == 100) {
-    x = tree.length * -123;
+
+  // İlk seviyede x pozisyonunu sıfırla
+  if (y === 100) {
+    x = ((tree.length + 1) * -HORIZONTAL_SPACING) / 2;
   }
 
-  tree.forEach((task, index) => {
+  let currentX = x;
+
+  tree.forEach((task) => {
+    // Alt düğümlerin genişliğini hesapla
+    const subtreeWidth = calculateSubtreeWidth(task, HORIZONTAL_SPACING);
+
+    // Mevcut düğümün pozisyonu
     const node: Node = {
       id: task._id,
       type: 'customTaskNode',
       position: {
-        x: x + index * HORIZONTAL_SPACING,
+        x: currentX + subtreeWidth / 2 - HORIZONTAL_SPACING / 2,
         y: y + level * VERTICAL_SPACING,
       },
       data: { title: task.title, task: task },
     };
     nodes.push(node);
 
+    // Eğer alt düğümler varsa, alt düğümlerin konumlarını hesapla
     if (task.children.length > 0) {
       const childNodes = createNodes(
         task.children,
-        x +
-          index * HORIZONTAL_SPACING -
-          ((task.children.length - 1) * HORIZONTAL_SPACING) / 2,
+        currentX,
         y + VERTICAL_SPACING,
         level + 1
       );
       nodes = nodes.concat(childNodes);
     }
+
+    // Bir sonraki alt düğümün başlangıç pozisyonu
+    currentX += subtreeWidth;
   });
 
   return nodes;
 }
-
 function generateHierarchicalTaskNodes(tasks: Task[]): Node[] {
   const taskTree = buildTaskTree(tasks);
 
