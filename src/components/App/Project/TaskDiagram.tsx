@@ -22,6 +22,7 @@ import {
   getTaskStatusColor,
   getTaskStatusText,
 } from '../../../utils/status';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const CustomTaskNode: React.FC<{
   data: { title: string; task: Task };
@@ -56,14 +57,28 @@ const CustomTaskNode: React.FC<{
 
 const CustomProjectNode: React.FC<{
   data: { title: string };
-}> = ({ data: { title } }) => (
-  <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
-    <h1>{title}</h1>
+}> = ({ data: { title } }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { projectId } = useParams<{ projectId: string }>();
+  return (
+    <div
+      onClick={() =>
+        navigate(`/p/${projectId}`, {
+          state: {
+            backgroundLocation: location,
+          },
+        })
+      }
+      className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"
+    >
+      <h1>{title}</h1>
 
-    {/* <Handle type="target" position={Position.Top} /> */}
-    <Handle type="source" position={Position.Bottom} />
-  </div>
-);
+      {/* <Handle type="target" position={Position.Top} /> */}
+      <Handle type="source" position={Position.Bottom} />
+    </div>
+  );
+};
 
 const nodeTypes: NodeTypes = {
   customTaskNode: CustomTaskNode,
@@ -111,14 +126,17 @@ function calculateSubtreeWidth(node: TreeNode, spacing: number): number {
     .reduce((a, b) => a + b, 0);
 }
 
-function createNodes(tree: TreeNode[], x = 0, y = 100, level = 0): Node[] {
+function createNodes(tree: TreeNode[], x = 0, y = 200, level = 0): Node[] {
   let nodes: Node[] = [];
   const HORIZONTAL_SPACING = 300;
   const VERTICAL_SPACING = 200;
 
   // İlk seviyede x pozisyonunu sıfırla
-  if (y === 100) {
-    x = ((tree.length + 1) * -HORIZONTAL_SPACING) / 2;
+  if (y === 200) {
+    const totalWidth = tree
+      .map((task) => calculateSubtreeWidth(task, HORIZONTAL_SPACING))
+      .reduce((a, b) => a + b, 0);
+    x = -totalWidth / 2;
   }
 
   let currentX = x;

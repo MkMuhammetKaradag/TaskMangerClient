@@ -46,7 +46,7 @@ const ProjectsPage: React.FC = () => {
   if (!data) return <div>No data available</div>;
 
   const openTasks = (id: string) => {
-    navigate(`/project/${id}`);
+    navigate(`/project/${id}/tasks`);
   };
 
   return (
