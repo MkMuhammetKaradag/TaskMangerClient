@@ -64,7 +64,7 @@ const CustomProjectNode: React.FC<{
   return (
     <div
       onClick={() =>
-        navigate(`/p/${projectId}`, {
+        navigate(`/p/${projectId}/project`, {
           state: {
             backgroundLocation: location,
           },

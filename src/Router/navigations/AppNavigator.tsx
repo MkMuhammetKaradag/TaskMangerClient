@@ -49,7 +49,7 @@ const AppNavigator = () => {
         {state?.backgroundLocation && (
           <Routes>
             <Route
-              path="/p/:projectId"
+              path="/p/:projectId/:segment"
               element={
                 <RoleBasedRoute
                   element={<ProjectDetailPage />}
