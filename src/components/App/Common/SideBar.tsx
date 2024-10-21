@@ -85,7 +85,9 @@ const Sidebar: React.FC = () => {
     }
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   const toggleSearch = () => {
     setIsExpanded((prev) => !prev);
     setIsSearchOpen((prev) => !prev);
@@ -149,16 +151,16 @@ const Sidebar: React.FC = () => {
 
         <nav className="flex-grow">{MENU_ITEMS.map(renderMenuItem)}</nav>
 
-        <div className="flex  bg-gray-900">
+        <div className="relative bottom-0  bg-gray-900">
           <button
-            onClick={toggleMenu}
+            onClick={() => toggleMenu()}
             className="flex items-center hover:bg-gray-900 p-2 rounded w-full transition-all duration-300 ease-in-out overflow-hidden"
           >
             <AiOutlineUser className="text-2xl min-w-[1.5rem] flex-shrink-0" />
             {renderMenuText('Daha fazla')}
           </button>
           {isMenuOpen && (
-            <div className="absolute bottom-full left-0 w-full bg-gray-800 rounded-t-md shadow-lg overflow-hidden">
+            <div className=" absolute bottom-full  w-full left-0 bg-gray-800 rounded-t-md shadow-lg ">
               <Link
                 to={`/user/${user?._id}`}
                 className="block px-4 py-2 hover:bg-gray-700"

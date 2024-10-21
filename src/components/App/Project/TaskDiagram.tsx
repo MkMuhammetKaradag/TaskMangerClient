@@ -228,7 +228,7 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        fitView
+        // fitView={true}
         nodeTypes={nodeTypes}
       >
         <Background />

@@ -4,6 +4,8 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import { useQuery } from '@apollo/client';
+import { GET_PROJECT_WITH_DETAILS } from '../../graphql/queries';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 interface TabProps {
@@ -94,7 +96,58 @@ interface ProjectDetails {
     reviewTasks: number;
     doneTasks: number;
   };
+  tasks: Array<{
+    _id: string;
+    title: string;
+    description: string;
+    status: string;
+    assignee: {
+      _id: string;
+      firstName: string;
+      lastName: string;
+      profilePhoto: string | null;
+    };
+  }>;
 }
+
+interface ProjectWithDetailsQueryResult {
+  getProjectWithDetails: ProjectDetails;
+}
+
+interface ProjectWithDetailsOperationVariables {
+  projectId?: string;
+}
+
+const calculateUserTaskStats = (userId: string, tasks: any[]) => {
+  const userTasks = tasks.filter((task) => task.assignee._id === userId);
+  const stats = {
+    total: userTasks.length,
+    todo: 0,
+    in_progress: 0,
+    review: 0,
+    done: 0,
+  };
+
+  userTasks.forEach((task) => {
+    switch (task.status) {
+      case 'TODO':
+        stats.todo++;
+        break;
+      case 'IN_PROGRESS':
+        stats.in_progress++;
+        break;
+      case 'REVIEW':
+        stats.review++;
+        break;
+      case 'DONE':
+        stats.done++;
+        break;
+    }
+  });
+
+  return stats;
+};
+
 const ProjectDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,45 +160,21 @@ const ProjectDetailPage: React.FC = () => {
     null
   );
 
+  const { data, loading, error } = useQuery<
+    ProjectWithDetailsQueryResult,
+    ProjectWithDetailsOperationVariables
+  >(GET_PROJECT_WITH_DETAILS, {
+    variables: { projectId },
+  });
+
   useEffect(() => {
-    // Burada GraphQL sorgunuzu yapacaksınız
-    // Örnek olarak, veriyi doğrudan state'e atıyoruz
-    setProjectDetails({
-      _id: '670e4c24fa104cd56299cc0e',
-      name: 'task Frontend',
-      startDate: '1729026000000',
-      endDate: '1729371600000',
-      status: 'ACTIVE',
-      description: 'task projesi için frontend tasarımı',
-      projectManager: {
-        _id: '6707b9fc1b66fd4f88469e6d',
-        firstName: 'asas',
-        lastName: 'asasa',
-        profilePhoto: null,
-      },
-      team: [
-        {
-          _id: '6707b9fc1b66fd4f88469e6d',
-          firstName: 'asas',
-          lastName: 'asasa',
-          profilePhoto: null,
-        },
-        {
-          _id: '670d10b0f9830ab3c96b1d8a',
-          firstName: 'yifa',
-          lastName: 'fare',
-          profilePhoto: null,
-        },
-      ],
-      taskSummary: {
-        totalTasks: 17,
-        todoTasks: 15,
-        in_progressTasks: 1,
-        reviewTasks: 1,
-        doneTasks: 0,
-      },
-    });
-  }, []);
+    if (data) {
+      setProjectDetails(data?.getProjectWithDetails);
+    }
+  }, [data]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   const handleClose = () => {
     const backgroundLocation = location.state?.backgroundLocation;
@@ -188,19 +217,92 @@ const ProjectDetailPage: React.FC = () => {
       case 'team':
         return (
           <div className="p-6">
-            <h3 className="text-xl font-semibold mb-2">Project Manager</h3>
-            <p>
-              {projectDetails.projectManager.firstName}{' '}
-              {projectDetails.projectManager.lastName}
-            </p>
             <h2 className="text-2xl font-bold mb-4">Team Members</h2>
-            <ul>
-              {projectDetails.team.map((member) => (
-                <li key={member._id} className="mb-2">
-                  {member.firstName} {member.lastName}
-                </li>
-              ))}
-            </ul>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projectDetails.team.map((member) => {
+                const stats = calculateUserTaskStats(
+                  member._id,
+                  projectDetails.tasks
+                );
+                return (
+                  <div
+                    key={member._id}
+                    className="bg-white shadow rounded-lg p-4"
+                  >
+                    <div className="flex items-center mb-4">
+                      {member.profilePhoto ? (
+                        <img
+                          src={member.profilePhoto}
+                          alt={`${member.firstName} ${member.lastName}`}
+                          className="w-12 h-12 rounded-full mr-4"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
+                          <span className="text-xl font-bold text-gray-600">
+                            {member.firstName[0]}
+                            {member.lastName[0]}
+                          </span>
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="font-semibold">{`${member.firstName} ${member.lastName}`}</h3>
+                        <p className="text-sm text-gray-600">
+                          Total Tasks: {stats.total}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <h4 className="font-semibold mb-2">Task Distribution</h4>
+                      <Pie
+                        data={{
+                          labels: ['Todo', 'In Progress', 'Review', 'Done'],
+                          datasets: [
+                            {
+                              data: [
+                                stats.todo,
+                                stats.in_progress,
+                                stats.review,
+                                stats.done,
+                              ],
+                              backgroundColor: [
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(255, 159, 64, 0.7)',
+                                'rgba(153, 102, 255, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                              ],
+                              borderColor: [
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(75, 192, 192, 1)',
+                              ],
+                              borderWidth: 1,
+                            },
+                          ],
+                        }}
+                        options={{
+                          responsive: true,
+                          plugins: {
+                            legend: {
+                              position: 'bottom',
+                              labels: {
+                                boxWidth: 12,
+                                font: {
+                                  size: 10,
+                                },
+                              },
+                            },
+                            title: {
+                              display: false,
+                            },
+                          },
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         );
       case 'taskSummary':
