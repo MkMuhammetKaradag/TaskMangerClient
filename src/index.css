@@ -4,3 +4,25 @@
 .zoomable {
   transition: transform 0.2s; /* Animasyon için */
 }
+.download-image .react-flow__node {
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.download-image .react-flow__node-custom {
+  border-radius: 5px;
+}
+
+.download-image .react-flow__node-custom .react-flow__handle-right {
+  transform: none;
+}
+
+.download-image .download-btn {
+  cursor: pointer;
+}
+
+.download-image .download-btn:hover {
+  opacity: 0.9;
+}

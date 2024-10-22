@@ -23,6 +23,7 @@ import {
   getTaskStatusText,
 } from '../../../utils/status';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import DownloadButton from './DownloadButton';
 
 const CustomTaskNode: React.FC<{
   data: { title: string; task: Task };
@@ -230,7 +231,9 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
         onEdgesChange={onEdgesChange}
         // fitView={true}
         nodeTypes={nodeTypes}
+        className="download-image"
       >
+        <DownloadButton />
         <Background />
         <Controls />
         <MiniMap />
