@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { FiAlertCircle, FiClock } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Task, TaskPriority } from '../../../types/graphql';
 
 interface TaskCardProps {
@@ -11,6 +11,7 @@ interface TaskCardProps {
 
 export const TaskCard = ({ task, isDragging = false }: TaskCardProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const priorityColors = {
     [TaskPriority.LOW]: 'bg-green-100 text-green-800',
     [TaskPriority.MEDIUM]: 'bg-yellow-100 text-yellow-800',
@@ -32,7 +33,11 @@ export const TaskCard = ({ task, isDragging = false }: TaskCardProps) => {
         `}
     >
       <div
-        onClick={() => navigate(`/task/${task._id}`)}
+        onClick={() =>
+          navigate(`/task/${task._id}`, {
+            state: { backgroundLocation: location },
+          })
+        }
         className="font-medium mb-2 hover:cursor-pointer"
       >
         {task.title}

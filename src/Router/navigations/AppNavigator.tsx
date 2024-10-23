@@ -6,6 +6,7 @@ import ProjectsPage from '../../pages/App/ProjectsPage';
 import ProjectPage from '../../pages/App/ProjectPage';
 import AppLayout from './AppLayout';
 import ProjectDetailPage from '../../pages/App/ProjectDetailPage';
+import TaskPage from '../../pages/App/TaskPage';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -53,6 +54,15 @@ const AppNavigator = () => {
               element={
                 <RoleBasedRoute
                   element={<ProjectDetailPage />}
+                  allowedRoles={['WORKER', 'ADMIN']}
+                />
+              }
+            />
+            <Route
+              path="/task/:taskId"
+              element={
+                <RoleBasedRoute
+                  element={<TaskPage />}
                   allowedRoles={['WORKER', 'ADMIN']}
                 />
               }

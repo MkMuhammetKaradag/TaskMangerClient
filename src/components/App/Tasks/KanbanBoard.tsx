@@ -47,7 +47,7 @@ export const KanbanBoard = ({ initialTasks }: { initialTasks: Task[] }) => {
       return true;
     } catch (error) {
       return false;
-      console.error(error);
+      // console.error(error);
     }
   };
 

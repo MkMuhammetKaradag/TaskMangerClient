@@ -43,6 +43,19 @@ export interface Task {
   priority: TaskPriority;
   dueDate: string;
   parentTask: ParentTask | null;
-
   subTasks: SubTask[];
+}
+interface BaseUser {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  profilePhoto?: string;
+}
+export interface TaskDetail extends Task {
+  assignee: BaseUser;
+  project: {
+    _id: string;
+    name: string;
+  };
+  createdByUser: BaseUser;
 }
