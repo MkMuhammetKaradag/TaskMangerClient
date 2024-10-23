@@ -71,7 +71,7 @@ const CustomProjectNode: React.FC<{
           },
         })
       }
-      className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"
+      className="px-4  hover:cursor-pointer py-2 shadow-md rounded-md bg-white border-2 border-stone-400"
     >
       <h1>{title}</h1>
 

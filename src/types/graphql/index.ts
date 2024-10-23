@@ -25,6 +25,15 @@ export enum TaskStatus {
   REVIEW = 'REVIEW',
   DONE = 'DONE',
 }
+interface SubTask {
+  _id: string;
+  title: string;
+}
+
+interface ParentTask {
+  _id: string;
+  title: string;
+}
 
 export interface Task {
   _id: string;
@@ -33,7 +42,7 @@ export interface Task {
   status: TaskStatus;
   priority: TaskPriority;
   dueDate: string;
-  parentTask: {
-    _id: string;
-  } | null;
+  parentTask: ParentTask | null;
+
+  subTasks: SubTask[];
 }

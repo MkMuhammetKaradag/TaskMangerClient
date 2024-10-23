@@ -5,26 +5,8 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { SortableTaskCard } from './SortableTaskCard';
-interface SubTask {
-  _id: string;
-  title: string;
-}
+import { Task } from '../../../types/graphql';
 
-interface ParentTask {
-  _id: string;
-  title: string;
-}
-
-interface Task {
-  _id: string;
-  title: string;
-  parentTask: ParentTask | null;
-  subTasks: SubTask[];
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'REVIEW';
-  priority: 'LOW' | 'MEDIUM' | 'HIGH';
-  dueDate: string;
-  description: string;
-}
 interface TaskColumnProps {
   status: Task['status'];
   tasks: Task[];

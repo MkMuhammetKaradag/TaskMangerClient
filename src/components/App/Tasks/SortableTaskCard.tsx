@@ -2,26 +2,8 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { TaskCard } from './TaskCard';
-interface SubTask {
-  _id: string;
-  title: string;
-}
+import { Task } from '../../../types/graphql';
 
-interface ParentTask {
-  _id: string;
-  title: string;
-}
-
-interface Task {
-  _id: string;
-  title: string;
-  parentTask: ParentTask | null;
-  subTasks: SubTask[];
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'REVIEW';
-  priority: 'LOW' | 'MEDIUM' | 'HIGH';
-  dueDate: string;
-  description: string;
-}
 interface SortableTaskCardProps {
   task: Task;
 }

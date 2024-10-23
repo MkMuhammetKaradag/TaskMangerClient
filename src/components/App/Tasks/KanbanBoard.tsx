@@ -13,31 +13,43 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { TaskColumn } from './TaskColumn';
 import { TaskCard } from './TaskCard';
-interface SubTask {
-  _id: string;
-  title: string;
-}
+import { Task, TaskStatus } from '../../../types/graphql';
+import { useMutation } from '@apollo/client';
+import { UPDATE_TASK_STATUS } from '../../../graphql/mutations';
 
-interface ParentTask {
-  _id: string;
-  title: string;
-}
-
-interface Task {
-  _id: string;
-  title: string;
-  parentTask: ParentTask | null;
-  subTasks: SubTask[];
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'REVIEW';
-  priority: 'LOW' | 'MEDIUM' | 'HIGH';
-  dueDate: string;
-  description: string;
-}
 const statusColumns = ['TODO', 'IN_PROGRESS', 'DONE', 'REVIEW'];
+interface UpdateTaskStatusMutationResult {
+  getAllMyTasks: Task[];
+}
+
+interface UpdateTaskStatusVariables {
+  input: {
+    taskId: string;
+    status: TaskStatus;
+  };
+}
 
 export const KanbanBoard = ({ initialTasks }: { initialTasks: Task[] }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [updateTaskStatus, { loading }] = useMutation<
+    UpdateTaskStatusMutationResult,
+    UpdateTaskStatusVariables
+  >(UPDATE_TASK_STATUS);
+
+  const handeChangeStatus = (taskId: string, status: TaskStatus) => {
+    try {
+      updateTaskStatus({
+        variables: {
+          input: { taskId, status },
+        },
+      });
+      return true;
+    } catch (error) {
+      return false;
+      console.error(error);
+    }
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -109,6 +121,7 @@ export const KanbanBoard = ({ initialTasks }: { initialTasks: Task[] }) => {
         );
 
         // Yeni sıralanmış array'i ve diğer container'ların task'larını birleştir
+
         setTasks([...otherTasks, ...reorderedContainerTasks]);
       }
     }
@@ -152,8 +165,10 @@ export const KanbanBoard = ({ initialTasks }: { initialTasks: Task[] }) => {
       //     (task, index, self) =>
       //       index === self.findIndex((t) => t._id === task._id)
       //   );
-
-      setTasks([...otherTasks, ...newTargetTasks]);
+      if (handeChangeStatus(movedTask._id, overContainer as Task['status'])) {
+        setTasks([...otherTasks, ...newTargetTasks]);
+      }
+      // console.log(overContainer, movedTask._id); // change task status
     }
 
     setActiveId(null);
