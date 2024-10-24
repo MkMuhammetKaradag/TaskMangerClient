@@ -20,9 +20,6 @@ const imageHeight = 900;
 function DownloadButton() {
   const { getNodes } = useReactFlow();
   const onClick = () => {
-    // we calculate a transform for the nodes so that all nodes are visible
-    // we then overwrite the transform of the `.react-flow__viewport` element
-    // with the style option of the html-to-image library
     const nodesBounds = getNodesBounds(getNodes());
     const viewport = getViewportForBounds(
       nodesBounds,
