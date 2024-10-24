@@ -3,34 +3,10 @@ import { BiCalendar, BiFolder, BiUser } from 'react-icons/bi';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { TaskDetail } from '../../types/graphql';
 import { getTaskPriorityColor, getTaskStatusColor } from '../../utils/status';
-import { AiOutlineClose } from 'react-icons/ai';
 import { useQuery } from '@apollo/client';
 import { GET_TASK } from '../../graphql/queries';
-
-// Helper function for date formatting
-const formatDate = (timestamp: string): string => {
-  const date = new Date(parseInt(timestamp));
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  }).format(date);
-};
-
-// Close Button component
-interface CloseButtonProps {
-  onClick: () => void;
-}
-const CloseButton: FC<CloseButtonProps> = ({ onClick }) => (
-  <div className="absolute top-0 right-0 z-50 justify-end ">
-    <button
-      onClick={onClick}
-      className=" bg-black rounded-full text-gray-100 xl:bg-transparent xl:text-white text-3xl"
-    >
-      <AiOutlineClose />
-    </button>
-  </div>
-);
+import CloseButton from '../../components/App/Common/CloseButton';
+import { formatDate } from '../../utils/formatDate';
 
 // Main Task Page component
 interface GetTaskQueryResult {
@@ -49,6 +25,7 @@ const TaskPage: FC = () => {
     GetTaskOperationVariables
   >(GET_TASK, {
     variables: { taskId: taskId },
+    fetchPolicy: 'no-cache',
   });
 
   const handleClose = () => {

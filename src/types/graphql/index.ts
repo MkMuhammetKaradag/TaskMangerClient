@@ -12,6 +12,20 @@ export interface Project {
   endDate: string;
   status: ProjectStatus;
 }
+export interface TaskSummary {
+  totalTasks: number;
+  todoTasks: number;
+  in_progressTasks: number;
+  reviewTasks: number;
+  doneTasks: number;
+}
+
+export interface ProjectDetail extends Project {
+  projectManager: BaseUser;
+  team: BaseUser[];
+  taskSummary: TaskSummary;
+  tasks: TaskDetail[];
+}
 
 export enum TaskPriority {
   LOW = 'LOW',
@@ -45,7 +59,7 @@ export interface Task {
   parentTask: ParentTask | null;
   subTasks: SubTask[];
 }
-interface BaseUser {
+export interface BaseUser {
   _id: string;
   firstName: string;
   lastName: string;

@@ -14,7 +14,7 @@ import {
 } from 'react-icons/ai';
 import { RiTaskFill, RiTaskLine } from 'react-icons/ri';
 import { Link, useLocation } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 import { logout } from '../../../redux/slices/AuthSlice';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { LOGOUT_USER } from '../../../graphql/mutations';
@@ -74,12 +74,13 @@ const Sidebar: React.FC = () => {
   const { pathname } = useLocation();
   const [logoutUser] = useMutation(LOGOUT_USER);
   const dispatch = useAppDispatch();
-
+  const client = useApolloClient();
   // Handlers
   const handleLogout = async () => {
     try {
       await logoutUser();
       dispatch(logout());
+      await client.clearStore();
     } catch (err) {
       console.error('Logout error:', err);
     }
