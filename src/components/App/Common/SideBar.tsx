@@ -11,6 +11,7 @@ import {
   AiOutlineShop,
   AiFillBell,
   AiOutlineBell,
+  AiOutlinePlus,
 } from 'react-icons/ai';
 import { RiTaskFill, RiTaskLine } from 'react-icons/ri';
 import { Link, useLocation } from 'react-router-dom';
@@ -19,6 +20,7 @@ import { logout } from '../../../redux/slices/AuthSlice';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { LOGOUT_USER } from '../../../graphql/mutations';
 import SearchPanel from './SearchPanel';
+import { UserRole } from '../../../types/redux';
 
 // Types
 interface MenuItem {
@@ -26,6 +28,7 @@ interface MenuItem {
   outlineIcon: IconType;
   text: string;
   link: string;
+  roles?: UserRole[]; // Hangi rollerin görebileceğini belirlemek için
 }
 
 // Constants
@@ -48,7 +51,12 @@ const MENU_ITEMS: MenuItem[] = [
     text: 'Projects',
     link: '/projects',
   },
-  { icon: RiTaskFill, outlineIcon: RiTaskLine, text: 'Tasks', link: '/tasks' },
+  {
+    icon: RiTaskFill,
+    outlineIcon: RiTaskLine,
+    text: 'Tasks',
+    link: '/tasks',
+  },
   {
     icon: AiFillShop,
     outlineIcon: AiOutlineShop,
@@ -60,6 +68,21 @@ const MENU_ITEMS: MenuItem[] = [
     outlineIcon: AiOutlineBell,
     text: 'Bildirimler',
     link: '/notifications',
+  },
+  // Yeni eklenen rol bazlı menü öğeleri
+  {
+    icon: AiOutlinePlus,
+    outlineIcon: AiOutlinePlus,
+    text: 'Create Project',
+    link: '/create-project',
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE], // Sadece admin ve executive görebilir
+  },
+  {
+    icon: AiOutlinePlus,
+    outlineIcon: AiOutlinePlus,
+    text: 'Create Task',
+    link: '/create-task',
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Admin, executive ve worker görebilir
   },
 ];
 
@@ -75,6 +98,7 @@ const Sidebar: React.FC = () => {
   const [logoutUser] = useMutation(LOGOUT_USER);
   const dispatch = useAppDispatch();
   const client = useApolloClient();
+
   // Handlers
   const handleLogout = async () => {
     try {
@@ -89,10 +113,18 @@ const Sidebar: React.FC = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
   const toggleSearch = () => {
     setIsExpanded((prev) => !prev);
     setIsSearchOpen((prev) => !prev);
   };
+
+  // Kullanıcının rolüne göre menü öğelerini filtreleme
+  const filteredMenuItems = MENU_ITEMS.filter((item) => {
+    if (!item.roles) return true; // Rol belirtilmemişse herkes görebilir
+    return user?.roles && item.roles.some((role) => user.roles.includes(role));
+  });
+  console.log(user?.roles);
 
   // Render functions
   const renderMenuItem = (item: MenuItem, index: number) => {
@@ -138,7 +170,7 @@ const Sidebar: React.FC = () => {
     <>
       {/* Desktop Sidebar */}
       <div
-        className={`fixed z-20 left-0 top-0 h-full bg-black  text-white p-2 md:flex flex-col hidden  transition-all duration-300 ease-in-out ${
+        className={`fixed z-20 left-0 top-0 h-full bg-black text-white p-2 md:flex flex-col hidden transition-all duration-300 ease-in-out ${
           isExpanded ? 'w-64' : 'w-16'
         }`}
       >
@@ -150,9 +182,9 @@ const Sidebar: React.FC = () => {
           </h1>
         </div>
 
-        <nav className="flex-grow">{MENU_ITEMS.map(renderMenuItem)}</nav>
+        <nav className="flex-grow">{filteredMenuItems.map(renderMenuItem)}</nav>
 
-        <div className="relative bottom-0  bg-gray-900">
+        <div className="relative bottom-0 bg-gray-900">
           <button
             onClick={() => toggleMenu()}
             className="flex items-center hover:bg-gray-900 p-2 rounded w-full transition-all duration-300 ease-in-out overflow-hidden"
@@ -161,7 +193,7 @@ const Sidebar: React.FC = () => {
             {renderMenuText('Daha fazla')}
           </button>
           {isMenuOpen && (
-            <div className=" absolute bottom-full  w-full left-0 bg-gray-800 rounded-t-md shadow-lg ">
+            <div className="absolute bottom-full w-full left-0 bg-gray-800 rounded-t-md shadow-lg">
               <Link
                 to={`/user/${user?._id}`}
                 className="block px-4 py-2 hover:bg-gray-700"
@@ -188,12 +220,8 @@ const Sidebar: React.FC = () => {
 
       {/* Mobile Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-black text-white p-2 z-50 flex justify-around md:hidden">
-        {MENU_ITEMS.slice(0, 5).map((item, index) => (
-          <button
-            key={index}
-            // onClick={item.text === 'Ara' ? toggleSearch : undefined}
-            className="flex flex-col items-center"
-          >
+        {filteredMenuItems.slice(0, 5).map((item, index) => (
+          <button key={index} className="flex flex-col items-center">
             <item.icon className="text-2xl" />
           </button>
         ))}

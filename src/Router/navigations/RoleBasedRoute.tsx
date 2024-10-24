@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAppSelector } from '../../redux/hooks';
-import { User } from '../../types/redux';
+import { User, UserRole } from '../../types/redux';
 interface RoleBasedRouteProps {
   element: React.ReactElement;
-  allowedRoles: string[];
+  allowedRoles: UserRole[];
 }
 const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
   element,
@@ -14,7 +14,7 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
 
   const hasRequiredRole = (
     user: User | null,
-    allowedRoles: string[]
+    allowedRoles: UserRole[]
   ): boolean => {
     return user?.roles.some((role) => allowedRoles.includes(role)) || false;
   };

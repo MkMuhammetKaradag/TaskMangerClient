@@ -7,6 +7,7 @@ import ProjectPage from '../../pages/App/ProjectPage';
 import AppLayout from './AppLayout';
 import ProjectDetailPage from '../../pages/App/ProjectDetailPage';
 import TaskPage from '../../pages/App/TaskPage';
+import { UserRole } from '../../types/redux';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -21,7 +22,7 @@ const AppNavigator = () => {
             element={
               <RoleBasedRoute
                 element={<TasksPage />}
-                allowedRoles={['WORKER', 'ADMIN']}
+                allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
               />
             }
           />
@@ -30,7 +31,7 @@ const AppNavigator = () => {
             element={
               <RoleBasedRoute
                 element={<ProjectPage />}
-                allowedRoles={['WORKER', 'ADMIN']}
+                allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
               />
             }
           />
@@ -40,7 +41,7 @@ const AppNavigator = () => {
             element={
               <RoleBasedRoute
                 element={<ProjectsPage />}
-                allowedRoles={['WORKER', 'ADMIN']}
+                allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
               />
             }
           />
@@ -54,7 +55,7 @@ const AppNavigator = () => {
               element={
                 <RoleBasedRoute
                   element={<ProjectDetailPage />}
-                  allowedRoles={['WORKER', 'ADMIN']}
+                  allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
                 />
               }
             />
@@ -63,7 +64,7 @@ const AppNavigator = () => {
               element={
                 <RoleBasedRoute
                   element={<TaskPage />}
-                  allowedRoles={['WORKER', 'ADMIN']}
+                  allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
                 />
               }
             />
