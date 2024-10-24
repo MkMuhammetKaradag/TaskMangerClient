@@ -22,7 +22,7 @@ export const TaskColumn = ({ status, tasks }: TaskColumnProps) => {
       ref={setNodeRef}
       className={`
        
-          bg-gray-100 p-4 rounded-lg  w-80 overflow-x-hidden max-h-[90vh] overflow-y-auto 
+          bg-gray-100 p-4 rounded-lg   overflow-x-hidden max-h-[90vh] overflow-y-auto 
           transition-colors duration-200
           ${isOver ? 'bg-gray-200 ring-2 ring-blue-400 ring-inset' : ''}
         `}

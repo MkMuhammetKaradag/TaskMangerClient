@@ -186,7 +186,7 @@ export const KanbanBoard = ({ initialTasks }: { initialTasks: Task[] }) => {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex   justify-between">
+        <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2  grid-cols-1  gap-4">
           {statusColumns.map((status) => (
             <TaskColumn
               key={status}
