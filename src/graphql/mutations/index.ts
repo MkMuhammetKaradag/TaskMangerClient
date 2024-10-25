@@ -9,6 +9,7 @@ export * from './Auth/Activation';
 export * from './Tasks/UpdateTaskStatus';
 export * from './Tasks/RemoveParentTask';
 export * from './Tasks/UpdateTaskHierarchy';
+export * from './Tasks/CreateTask';
 
 //Project
 export * from './Project/CreateProject';

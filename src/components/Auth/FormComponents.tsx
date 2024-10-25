@@ -3,6 +3,8 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import styles from '../../utils/styles';
 import { UseFormRegister } from 'react-hook-form';
 import { User } from '../../types/redux';
+import { getTaskPriorityColor, getTaskStatusColor } from '../../utils/status';
+import { Project } from '../../types/graphql';
 
 interface InputFieldProps {
   label: string;
@@ -110,6 +112,113 @@ export const SelectUserField: React.FC<SelectUserFieldProps> = ({
   </div>
 );
 
+interface SelectProjectFieldProps {
+  label: string;
+  name: string;
+  projects: Project[];
+  register: UseFormRegister<any>;
+  error?: string;
+  multiple: boolean;
+  size: number;
+}
+export const SelectProjectField: React.FC<SelectProjectFieldProps> = ({
+  label,
+  name,
+  projects,
+  register,
+  multiple,
+  size,
+  error,
+}) => (
+  <div>
+    <label htmlFor={name} className={styles.label}>
+      {label}
+    </label>
+    <select
+      {...register(name)}
+      id={name}
+      multiple={multiple}
+      size={size}
+      className={`${styles.input} ${error ? 'border-red-500' : ''}`}
+    >
+      {projects.map((project: Project) => (
+        <option key={project._id} value={project._id}>
+          {project.name}
+        </option>
+      ))}
+    </select>
+    {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+    {multiple && (
+      <p className="mt-1 text-sm text-gray-500">
+        Hold Ctrl (Windows) or Cmd (Mac) to select multiple members
+      </p>
+    )}
+  </div>
+);
+
+const enumToOptions = (enumObj: any) => {
+  return Object.keys(enumObj).map((key) => ({
+    label: key,
+    value: enumObj[key as keyof typeof enumObj],
+  }));
+};
+interface SelectEnumFieldProps<T> {
+  label: string;
+  name: string;
+  options: T;
+  register: UseFormRegister<any>;
+  error?: string;
+  multiple?: boolean;
+  size: number;
+}
+export const SelectEnumField = <T,>({
+  label,
+  name,
+  options,
+  register,
+  multiple = false,
+  size,
+  error,
+}: SelectEnumFieldProps<T>): React.ReactElement => {
+  const selectOptions = enumToOptions(options);
+
+  return (
+    <div className="w-full">
+      <label htmlFor={name} className={styles.label}>
+        {label}
+      </label>
+      <select
+        {...register(name)}
+        id={name}
+        multiple={multiple}
+        size={size}
+        className={`${styles.input} ${error ? 'border-red-500' : ''}`}
+      >
+        {selectOptions.map((option) => (
+          <option
+            key={option.value}
+            value={option.value}
+            style={{
+              backgroundColor: '#454323',
+              color:
+                name == 'status'
+                  ? getTaskStatusColor(option.value)
+                  : getTaskPriorityColor(option.value),
+            }}
+          >
+            {option.label}
+          </option>
+        ))}
+      </select>
+      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      {multiple && (
+        <p className="mt-1 text-sm text-gray-500">
+          Hold Ctrl (Windows) or Cmd (Mac) to select multiple members
+        </p>
+      )}
+    </div>
+  );
+};
 interface PasswordFieldProps {
   label: string;
   name: string;
@@ -179,10 +288,11 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
     }`}
   >
     {isSubmitting || isLoading ? 'İşlem yapılıyor...' : label}
+    {/* {!isValid && '-true'}
+    {isSubmitting && '-true'}
+    {isLoading && '-true'} */}
   </button>
 );
 
-export const FormError: React.FC<{ error: string | null  }> = ({
-  error,
-}) =>
+export const FormError: React.FC<{ error: string | null }> = ({ error }) =>
   error ? <p className="text-sm text-red-500 text-center">{error}</p> : null;
