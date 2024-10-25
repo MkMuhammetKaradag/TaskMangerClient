@@ -11,6 +11,9 @@ import {
   SubmitButton,
   TextAreaField,
 } from '../../components/Auth/FormComponents';
+import { User, UserRole } from '../../types/redux';
+import { CREATE_PROJECT } from '../../graphql/mutations';
+import { GET_COMPANY_USERS } from '../../graphql/queries';
 // Zod şeması
 const projectSchema = z
   .object({
@@ -49,45 +52,26 @@ const projectSchema = z
 
 type ProjectFormData = z.infer<typeof projectSchema>;
 
-// GraphQL Tanımlamaları
-const CREATE_PROJECT = gql`
-  mutation CreateProject($input: CreateProjectInput!) {
-    createProject(input: $input) {
-      _id
-      name
-      description
-    }
-  }
-`;
-
-// Kullanıcıları çekmek için query
-const GET_USERS = gql`
-  query GetUsers {
-    getCompanyUsers {
-      _id
-      firstName
-      lastName
-      roles
-    }
-  }
-`;
-
-interface User {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  roles: string[];
+interface GetCompanyUsersQueryResult {
+  getCompanyUsers: User[];
 }
 
+interface CreateProjectMutationResult {
+  createProject: {
+    _id: string;
+  };
+}
+
+interface CreateProjectOperationVariables {
+  input: ProjectFormData;
+}
 const CreateProjectPage = () => {
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
     watch,
-    setError,
   } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -101,20 +85,20 @@ const CreateProjectPage = () => {
   });
 
   // Mutations ve Queries
-  const [createProject, { loading: mutationLoading }] = useMutation(
-    CREATE_PROJECT,
-    {
-      onCompleted: () => {
-        navigate('/projects');
-      },
-      onError: (error) => {
-        console.error('Error creating project:', error);
-        // Burada bir hata bildirimi gösterebilirsiniz
-      },
-    }
-  );
+  const [createProject, { loading: mutationLoading }] = useMutation<
+    CreateProjectMutationResult,
+    CreateProjectOperationVariables
+  >(CREATE_PROJECT, {
+    onCompleted: () => {
+      navigate('/projects');
+    },
+    onError: (error) => {
+      console.error('Error creating project:', error);
+    },
+  });
 
-  const { data: usersData, loading: usersLoading } = useQuery(GET_USERS);
+  const { data: usersData, loading: usersLoading } =
+    useQuery<GetCompanyUsersQueryResult>(GET_COMPANY_USERS);
 
   const onSubmit = async (data: ProjectFormData) => {
     try {
@@ -139,7 +123,10 @@ const CreateProjectPage = () => {
       </div>
     );
   }
-  const users = usersData.getCompanyUsers;
+  if (!usersData) {
+    return <div>users is null</div>;
+  }
+  const users = usersData?.getCompanyUsers;
   const isFormValid =
     watch('name') &&
     watch('description') &&
@@ -179,7 +166,11 @@ const CreateProjectPage = () => {
               register={register}
               error={errors.projectManagerId?.message}
               multiple={false}
-              users={users}
+              users={users.filter((user) =>
+                user.roles.some((role) =>
+                  [UserRole.ADMIN, UserRole.EXECUTIVE].includes(role)
+                )
+              )}
             ></SelectUserField>
 
             <SelectUserField

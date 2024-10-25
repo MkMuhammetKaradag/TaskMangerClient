@@ -7,3 +7,8 @@ export * from './Auth/Activation';
 
 //TASKS
 export * from './Tasks/UpdateTaskStatus';
+export * from './Tasks/RemoveParentTask';
+export * from './Tasks/UpdateTaskHierarchy';
+
+//Project
+export * from './Project/CreateProject';

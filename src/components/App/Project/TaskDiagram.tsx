@@ -27,6 +27,11 @@ import {
 } from '../../../utils/TaskDiagram/createNodes';
 import { CustomTaskNode } from './CustomTaskNode';
 import { CustomProjectNode } from './CustomProjectNode';
+import { useMutation } from '@apollo/client';
+import {
+  REMOVE_PARENT_TASK,
+  UPDATE_TASK_HIERARCHY,
+} from '../../../graphql/mutations';
 
 const nodeTypes: NodeTypes = {
   customTaskNode: CustomTaskNode,
@@ -46,6 +51,37 @@ function generateHierarchicalTaskNodes(tasks: Task[]): Node[] {
 const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
+  const [removeParentTask, { loading: removeParentTaskLoading }] =
+    useMutation(REMOVE_PARENT_TASK);
+
+  const [updateTaskHierarchy, { loading: updateTaskHierarchyLoading }] =
+    useMutation(UPDATE_TASK_HIERARCHY);
+
+  const onRemoveParentTask = async (taskId: string) => {
+    try {
+      await removeParentTask({ variables: { taskId } });
+    } catch (error) {
+      console.error('Form submission error:', error);
+    }
+  };
+
+  const onUpdateTaskHierarchy = async (
+    taskId: string,
+    parentTaskId: string
+  ) => {
+    try {
+      await updateTaskHierarchy({
+        variables: {
+          input: {
+            taskId,
+            parentTaskId,
+          },
+        },
+      });
+    } catch (error) {
+      console.error('Form submission error:', error);
+    }
+  };
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -77,24 +113,24 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
   };
 
   // Bir node'un tüm alt node'larını bulan fonksiyon
-  const getAllDescendants = (
-    edges: Edge[],
-    nodeId: string,
-    descendants: Set<string> = new Set()
-  ): Set<string> => {
-    const childNodes = edges
-      .filter((edge) => edge.source === nodeId)
-      .map((edge) => edge.target);
+  // const getAllDescendants = (
+  //   edges: Edge[],
+  //   nodeId: string,
+  //   descendants: Set<string> = new Set()
+  // ): Set<string> => {
+  //   const childNodes = edges
+  //     .filter((edge) => edge.source === nodeId)
+  //     .map((edge) => edge.target);
 
-    childNodes.forEach((childId) => {
-      descendants.add(childId);
-      getAllDescendants(edges, childId, descendants);
-    });
+  //   childNodes.forEach((childId) => {
+  //     descendants.add(childId);
+  //     getAllDescendants(edges, childId, descendants);
+  //   });
 
-    return descendants;
-  };
+  //   return descendants;
+  // };
   const onConnect = useCallback(
-    (connection: Connection) => {
+    async (connection: Connection) => {
       if (!connection.source || !connection.target) return;
 
       // Hedefin zaten bir bağlantısı var mı kontrol et
@@ -110,11 +146,11 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
       );
 
       // Alt node'ları kontrol et
-      const descendants = getAllDescendants(edges, connection.target);
-      if (descendants.has(connection.source)) {
-        alert("Bir node, alt node'unun hedefine bağlanamaz!");
-        return;
-      }
+      // const descendants = getAllDescendants(edges, connection.target);
+      // if (descendants.has(connection.source)) {
+      //   alert("Bir node, alt node'unun hedefine bağlanamaz!");
+      //   return;
+      // }
 
       if (wouldCreateCycle) {
         alert('Bu bağlantı döngüsel bir yapı oluşturacağı için yapılamaz!');
@@ -136,6 +172,7 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
 
       if (targetHasConnection) {
         // Eski bağlantıyı sil ve yenisini ekle
+        await onUpdateTaskHierarchy(connection.target, connection.source);
         setEdges((edges) => [
           ...edges.filter((edge) => edge.target !== connection.target),
           newConnection,
@@ -150,9 +187,27 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
 
   // Bağlantı silme işlemi için yeni fonksiyon
   const onEdgeClick = useCallback(
-    (event: React.MouseEvent, edge: Edge) => {
-      console.log(edge.id);
-      setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+    async (event: React.MouseEvent, edge: Edge) => {
+      if (edge.source == 'project') {
+        alert(
+          'Proje parent task pahlantısı yok  silinemez sadece değiştirile bilr'
+        );
+        return;
+      }
+      const newConnection = {
+        id: `e${edge.target}-project`,
+        source: 'project',
+        target: edge.target,
+        markerEnd: edge.markerEnd,
+        style: edge.style,
+        interactionWidth: 10,
+      };
+      setEdges((eds) => [
+        ...eds.filter((e) => e.id !== edge.id),
+        newConnection,
+      ]);
+
+      await onRemoveParentTask(edge.target);
     },
     [setEdges]
   );
@@ -192,7 +247,7 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        onEdgeClick={onEdgeClick} // Bağlantı tıklama olayını ekledik
+        onEdgeClick={removeParentTaskLoading ? undefined : onEdgeClick} // Bağlantı tıklama olayını ekledik
         fitView
         nodeTypes={nodeTypes}
         className="download-image"
