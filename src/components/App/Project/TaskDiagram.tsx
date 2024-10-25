@@ -40,6 +40,7 @@ const nodeTypes: NodeTypes = {
 
 interface TaskDiagramProps {
   tasks: Task[];
+  isPermission: boolean;
 }
 
 function generateHierarchicalTaskNodes(tasks: Task[]): Node[] {
@@ -48,7 +49,7 @@ function generateHierarchicalTaskNodes(tasks: Task[]): Node[] {
   return createNodes(taskTree);
 }
 
-const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
+const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks, isPermission }) => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [removeParentTask, { loading: removeParentTaskLoading }] =
@@ -246,8 +247,10 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks }) => {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onEdgeClick={removeParentTaskLoading ? undefined : onEdgeClick} // Bağlantı tıklama olayını ekledik
+        onConnect={!isPermission ? undefined : onConnect}
+        onEdgeClick={
+          removeParentTaskLoading || !isPermission ? undefined : onEdgeClick
+        } // Bağlantı tıklama olayını ekledik
         fitView
         nodeTypes={nodeTypes}
         className="download-image"

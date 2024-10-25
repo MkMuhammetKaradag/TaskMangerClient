@@ -138,11 +138,11 @@ const CreateTaskPage = () => {
       <div className="max-w-2xl mx-auto">
         <div className="bg-white p-8 rounded-lg shadow">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">
-            Create New Project
+            Create New Task
           </h1>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <InputField
-              label="Task Title Name "
+              label="Task Title "
               name="title"
               type="title"
               placeholder="task"
