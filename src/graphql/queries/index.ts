@@ -4,4 +4,5 @@ export * from './GetAllTasksByProject';
 export * from './GetProjectWithDetails';
 export * from './GetAllMyTasks';
 export * from './GetTask';
-export * from "./GetCompanyUsers"
+export * from './GetCompanyUsers';
+export * from './GetUserChats';

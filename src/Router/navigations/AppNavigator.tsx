@@ -10,6 +10,8 @@ import TaskPage from '../../pages/App/TaskPage';
 import { UserRole } from '../../types/redux';
 import CreateProjectPage from '../../pages/App/CreateProjectPage';
 import CreateTaskPage from '../../pages/App/CreateTaskPage';
+import DirectPage from '../../pages/App/DirectPage';
+import ChatPage from '../../pages/App/ChatPage';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -66,6 +68,35 @@ const AppNavigator = () => {
               />
             }
           />
+
+          <Route
+            path="/direct"
+            element={
+              <RoleBasedRoute
+                element={<DirectPage />}
+                allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
+              />
+            }
+          >
+            <Route
+              index
+              element={
+                <div className="w-2/3 flex items-center justify-center text-2xl text-gray-500">
+                  Bir sohbet seçin
+                </div>
+              }
+            />
+            <Route
+              path="t/:chatId"
+              element={
+                <RoleBasedRoute
+                  element={<ChatPage />}
+                  allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
+                />
+              }
+            />
+          </Route>
+
           <Route path="/unauthorized" element={<div>Yetkisiz Erişim</div>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
