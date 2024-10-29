@@ -3,6 +3,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdVideoCall } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import Messages from '../../components/App/Chat/Messages';
+import MessageInput from '../../components/App/Chat/MessageInput';
 
 const ChatPage = () => {
   const { chatId } = useParams<{ chatId: string }>();
@@ -13,7 +14,7 @@ const ChatPage = () => {
     <div className="flex flex-col h-[95vh]">
       <ChatHeader chatId={chatId} />
       <Messages chatId={chatId} />
-      {/* <MessageInput chatId={chatId} /> */}
+      <MessageInput chatId={chatId} />
     </div>
   );
 };

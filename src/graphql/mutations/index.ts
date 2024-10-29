@@ -13,3 +13,7 @@ export * from './Tasks/CreateTask';
 
 //Project
 export * from './Project/CreateProject';
+
+//Chat
+export * from './Chat/GenerateSignedUploadUrl';
+export * from './Chat/AddMessageToChat';

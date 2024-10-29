@@ -15,7 +15,7 @@ const MessageItem: React.FC<MessageItemProps> = React.memo(
             <img
               src={media.url}
               alt="Image message"
-              className="max-w-xs rounded-lg"
+              className="max-w-xs rounded-lg w-52 h-52 object-cover"
               loading="lazy"
             />
           );
