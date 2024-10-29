@@ -6,3 +6,4 @@ export * from './GetAllMyTasks';
 export * from './GetTask';
 export * from './GetCompanyUsers';
 export * from './GetUserChats';
+export * from './GetChatMessages';
