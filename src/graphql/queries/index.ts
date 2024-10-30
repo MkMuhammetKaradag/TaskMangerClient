@@ -7,3 +7,4 @@ export * from './GetTask';
 export * from './GetCompanyUsers';
 export * from './GetUserChats';
 export * from './GetChatMessages';
+export * from './GetMessageReaders';

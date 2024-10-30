@@ -27,3 +27,6 @@ export interface Message {
   sender: Sender;
   media: MediaContent | null;
 }
+export interface MessageReaders extends Message {
+  isRead: Sender[];
+}

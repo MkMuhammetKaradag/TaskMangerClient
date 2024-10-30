@@ -4,6 +4,7 @@ export const ADD_MESSAGE_TO_CHAT_SUBSCRIPTION = gql`
     addMessageToChat(chatId: $chatId) {
       _id
       content
+      messageIsReaded
       media {
         url
         type

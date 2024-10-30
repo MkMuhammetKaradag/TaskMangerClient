@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { MediaContent, Message } from '../../../types/graphql/message';
+import { FaCheck } from 'react-icons/fa';
+import MessageDetailModal from './MessageDetailModal';
 
 interface MessageItemProps {
   message: Message;
@@ -8,6 +10,35 @@ interface MessageItemProps {
 
 const MessageItem: React.FC<MessageItemProps> = React.memo(
   ({ message, isCurrentUser }) => {
+    const [showModal, setShowModal] = useState(false);
+    const [longPressTimeout, setLongPressTimeout] = useState<ReturnType<
+      typeof setTimeout
+    > | null>(null);
+
+    // Uzun basma işlemini başlat
+    const handleTouchStart = useCallback(() => {
+      if (!isCurrentUser) return; // Sadece kendi mesajlarımız için çalışsın
+
+      const timeout = setTimeout(() => {
+        setShowModal(true);
+      }, 500); // 500ms sonra modal açılsın
+
+      setLongPressTimeout(timeout);
+    }, [isCurrentUser]);
+
+    // Basma işlemi bitti
+    const handleTouchEnd = useCallback(() => {
+      if (longPressTimeout) {
+        clearTimeout(longPressTimeout);
+        setLongPressTimeout(null);
+      }
+    }, [longPressTimeout]);
+
+    // Modal'ı kapat
+    const handleCloseModal = useCallback(() => {
+      setShowModal(false);
+    }, []);
+
     const renderMedia = (media: MediaContent) => {
       switch (media.type) {
         case 'IMAGE':
@@ -63,7 +94,14 @@ const MessageItem: React.FC<MessageItemProps> = React.memo(
 
     const renderContent = () => {
       if (message.type === 'TEXT') {
-        return <p className="break-words">{message.content}</p>;
+        return (
+          <div className="flex gap-3  items-end">
+            <p className="break-words">{message.content}</p>
+            {message.messageIsReaded && (
+              <FaCheck className="text-sky-600 " size={12} />
+            )}
+          </div>
+        );
       }
 
       return (
@@ -72,46 +110,65 @@ const MessageItem: React.FC<MessageItemProps> = React.memo(
             <div className="mb-1">{renderMedia(message.media)}</div>
           )}
           {message.content && (
-            <p className="text-sm text-gray-700 break-words">
-              {message.content}
-            </p>
+            <div className="flex gap-3 items-end">
+              <p className="text-sm text-gray-700 break-words">
+                {message.content}
+              </p>
+              {message.messageIsReaded && (
+                <FaCheck className="text-sky-600" size={12} />
+              )}
+            </div>
           )}
         </div>
       );
     };
 
     return (
-      <div
-        className={`mb-2 p-2 space-x-2 flex ${
-          isCurrentUser ? 'justify-end' : ''
-        }`}
-      >
-        {!isCurrentUser && (
-          <img
-            src={
-              message.sender.profilePhoto || 'https://via.placeholder.com/40'
-            }
-            alt="Profile"
-            className="w-8 h-8 rounded-full"
-          />
-        )}
+      <>
         <div
-          className={`${
-            isCurrentUser
-              ? 'rounded-tl-xl bg-sky-100 text-gray-900'
-              : 'rounded-tr-xl bg-slate-100'
-          } p-2 shadow rounded-b-xl ${
-            message.type === 'MEDIA' ? 'max-w-sm' : ''
+          className={`mb-2 p-2 space-x-2 flex ${
+            isCurrentUser ? 'justify-end' : ''
           }`}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onTouchMove={handleTouchEnd} // Kaydırma sırasında iptal et
+          onMouseDown={handleTouchStart}
+          onMouseUp={handleTouchEnd}
+          onMouseLeave={handleTouchEnd}
         >
           {!isCurrentUser && (
-            <span className="font-semibold">{message.sender.userName}</span>
+            <img
+              src={
+                message.sender.profilePhoto || 'https://via.placeholder.com/40'
+              }
+              alt="Profile"
+              className="w-8 h-8 rounded-full"
+            />
           )}
-          <div className={`${!isCurrentUser ? 'mt-2' : ''}`}>
-            {renderContent()}
+          <div
+            className={`${
+              isCurrentUser
+                ? 'rounded-tl-xl bg-sky-100 text-gray-900 hover:cursor-pointer'
+                : 'rounded-tr-xl bg-slate-100'
+            } p-2 shadow rounded-b-xl ${
+              message.type === 'MEDIA' ? 'max-w-sm' : ''
+            }`}
+          >
+            {!isCurrentUser && (
+              <span className="font-semibold">{message.sender.userName}</span>
+            )}
+            <div className={`${!isCurrentUser ? 'mt-2' : ''}`}>
+              {renderContent()}
+            </div>
           </div>
         </div>
-      </div>
+        {showModal && (
+          <MessageDetailModal
+            onClose={handleCloseModal}
+            messageId={message._id}
+          />
+        )}
+      </>
     );
   }
 );

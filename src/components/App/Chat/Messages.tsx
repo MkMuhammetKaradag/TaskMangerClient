@@ -90,7 +90,7 @@ const Messages: React.FC<MessagesProps> = ({ chatId }) => {
         variables: { chatId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
-          const newMessage = subscriptionData.data.addMessageToChat;
+          const newMessage = subscriptionData.data.addMessageToChat as Message;
           setExtraPassValue((prev) => prev + 1);
           if (newMessage && newMessage.sender._id !== user?._id) {
             markMessagesAsRead({
