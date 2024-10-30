@@ -157,7 +157,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ chatId }) => {
 
     return uploadedcloundinary.url;
   };
-  const sharedMessage = async () => {};
+
   const handleSend = useCallback(async () => {
     // if (loading) return;
     console.log(selectedFile?.type);
@@ -258,7 +258,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ chatId }) => {
             }`}
             // disabled={loading || (!message.trim() && !selectedFile)}
           >
-            {/* {loading ? 'Gönderiliyor...' : 'Gönder'} */}
+            {loading ? 'Gönderiliyor...' : 'Gönder'}
           </button>
         </div>
       </div>

@@ -23,6 +23,7 @@ export interface Message {
   _id: string;
   type: MessageType;
   content: string | null;
+  messageIsReaded: boolean;
   sender: Sender;
   media: MediaContent | null;
 }

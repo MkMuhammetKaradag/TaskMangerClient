@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { useAppSelector } from '../../../redux/hooks';
@@ -7,6 +7,7 @@ import { Message } from '../../../types/graphql/message';
 import { GET_CHAT_MESSAGES } from '../../../graphql/queries';
 import { ADD_MESSAGE_TO_CHAT_SUBSCRIPTION } from '../../../graphql/subscriptions';
 import MessageItem from './MessageItem';
+import { MARK_MESSAGES_AS_READ } from '../../../graphql/mutations';
 
 interface MessagesProps {
   chatId: string;
@@ -19,12 +20,34 @@ const Messages: React.FC<MessagesProps> = ({ chatId }) => {
   const [extraPassValue, setExtraPassValue] = useState(0);
 
   const user = useAppSelector((state) => state.auth.user);
-
+  const [markMessagesAsRead] = useMutation(MARK_MESSAGES_AS_READ);
   const [loadMessages, { loading, data, subscribeToMore }] = useLazyQuery(
     GET_CHAT_MESSAGES,
     {
       variables: { input: { chatId, page, limit: 10, extraPassValue: 0 } },
       fetchPolicy: 'network-only',
+      onCompleted(data) {
+        if (data?.getChatMessages?.messages && user?._id) {
+          const newMessages = data.getChatMessages.messages as Message[];
+
+          const unreadMessageIds = newMessages
+            .filter(
+              (msg) => msg.sender._id !== user._id && !msg.messageIsReaded
+            )
+            .map((msg) => msg._id);
+
+          if (unreadMessageIds.length > 0) {
+            markMessagesAsRead({
+              variables: {
+                messageIds: unreadMessageIds,
+                userId: user._id,
+              },
+            }).catch((error) => {
+              console.error('Error marking messages as read:', error);
+            });
+          }
+        }
+      },
     }
   );
 
@@ -69,6 +92,13 @@ const Messages: React.FC<MessagesProps> = ({ chatId }) => {
           if (!subscriptionData.data) return prev;
           const newMessage = subscriptionData.data.addMessageToChat;
           setExtraPassValue((prev) => prev + 1);
+          if (newMessage && newMessage.sender._id !== user?._id) {
+            markMessagesAsRead({
+              variables: {
+                messageIds: [newMessage._id],
+              },
+            }).catch(console.error);
+          }
           if (newMessage) {
             setMessages((prevMessages) => [...prevMessages, newMessage]);
           }

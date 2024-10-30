@@ -17,3 +17,4 @@ export * from './Project/CreateProject';
 //Chat
 export * from './Chat/GenerateSignedUploadUrl';
 export * from './Chat/AddMessageToChat';
+export * from './Chat/MarkMessagesAsRead';

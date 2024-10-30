@@ -7,6 +7,7 @@ export const GET_CHAT_MESSAGES = gql`
         _id
         content
         type
+        messageIsReaded
         media {
           _id
           type
