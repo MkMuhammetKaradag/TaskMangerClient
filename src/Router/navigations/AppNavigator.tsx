@@ -15,6 +15,8 @@ import ChatPage from '../../pages/App/ChatPage';
 import { useStatusUpdater } from '../../hooks/useStatusUpdater';
 import { useAutoLogout } from '../../hooks/useAutoLogout';
 
+import CreateChatPage from '../../pages/App/CreateChatPage';
+
 const AppNavigator = () => {
   const location = useLocation();
   useStatusUpdater();
@@ -72,7 +74,15 @@ const AppNavigator = () => {
               />
             }
           />
-
+          <Route
+            path="/create-chat"
+            element={
+              <RoleBasedRoute
+                element={<CreateChatPage />}
+                allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
+              />
+            }
+          />
           <Route
             path="/direct"
             element={

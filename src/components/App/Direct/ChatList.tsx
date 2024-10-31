@@ -3,6 +3,9 @@ import { useQuery } from '@apollo/client';
 import { Link, useParams } from 'react-router-dom';
 import { GET_USER_CHATS } from '../../../graphql/queries';
 import ChatParticipantCard from './ChatParticipantCard';
+import { useAppSelector } from '../../../redux/hooks';
+import { UserRole } from '../../../types/redux';
+import { FaPlus } from 'react-icons/fa';
 
 interface Participant {
   _id: string;
@@ -26,6 +29,8 @@ interface ChatItem {
 
 const ChatList: React.FC = () => {
   const { chatId } = useParams<{ chatId?: string }>();
+  const userRoles = useAppSelector((state) => state.auth.user?.roles);
+
   const { data, loading, error } = useQuery<{ getChats: ChatItem[] }>(
     GET_USER_CHATS
   );
@@ -66,9 +71,21 @@ const ChatList: React.FC = () => {
 
   return (
     <div className="h-[95vh] overflow-y-auto ">
-      <h2 className="text-xl font-bold p-4 sticky top-0 bg-white z-10 border-b">
-        Mesajlar
-      </h2>
+      <div className="border-b flex items-center justify-between px-10">
+        <h2 className="text-xl font-bold p-4 sticky top-0 bg-white z-10 ">
+          Mesajlar
+        </h2>
+        {userRoles && userRoles.includes(UserRole.ADMIN) && (
+          <FaPlus
+            onClick={() => {
+              // create new chat
+            }}
+            size={24}
+            className="text-blue-500 cursor-pointer"
+          />
+        )}
+      </div>
+
       {renderedContent}
     </div>
   );

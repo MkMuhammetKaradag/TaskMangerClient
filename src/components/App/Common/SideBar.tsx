@@ -85,6 +85,14 @@ const MENU_ITEMS: MenuItem[] = [
     link: '/create-task',
     roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Admin, executive ve worker görebilir
   },
+
+  {
+    icon: AiOutlinePlus,
+    outlineIcon: AiOutlinePlus,
+    text: 'Create Chat',
+    link: '/create-chat',
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE], // Sadece admin ve executive görebilir
+  },
 ];
 
 const Sidebar: React.FC = () => {
@@ -125,7 +133,6 @@ const Sidebar: React.FC = () => {
     if (!item.roles) return true; // Rol belirtilmemişse herkes görebilir
     return user?.roles && item.roles.some((role) => user.roles.includes(role));
   });
-  console.log(user?.roles);
 
   // Render functions
   const renderMenuItem = (item: MenuItem, index: number) => {
