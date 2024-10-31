@@ -65,7 +65,7 @@ const ChatList: React.FC = () => {
   }, [data, loading, error, chatId]);
 
   return (
-    <div className="h-[95vh] overflow-y-auto">
+    <div className="h-[95vh] overflow-y-auto ">
       <h2 className="text-xl font-bold p-4 sticky top-0 bg-white z-10 border-b">
         Mesajlar
       </h2>

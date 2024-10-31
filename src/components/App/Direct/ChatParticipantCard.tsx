@@ -53,32 +53,42 @@ const ChatParticipantCard: React.FC<ChatParticipantCardProps> = React.memo(
     });
 
     const renderParticipantImages = () => (
-      <div className="flex -space-x-3 relative">
-        {displayParticipants.map((participant, index) => (
-          <div key={index} className="relative">
-            <img
-              src={participant.profilePhoto || 'https://via.placeholder.com/40'}
-              alt={participant.userName}
-              className="w-10 h-10 rounded-full border-2 border-gray-800 object-cover"
-              style={{ zIndex: 3 - index }}
-            />
-            {onlineStatuses[participant._id] && (
-              <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full">
-                .
-              </span>
-            )}
-          </div>
-        ))}
-        {remainingParticipants > 0 && (
-          <div className="w-10 h-10 z-10 rounded-full flex items-center justify-center bg-gray-500 text-white text-sm font-bold border-2 border-gray-800">
-            +{remainingParticipants}
-          </div>
-        )}
-      </div>
+      <>
+        <div className=" -space-x-3 relative hidden md:flex ">
+          {displayParticipants.map((participant, index) => (
+            <div key={index} className="relative">
+              <img
+                src={
+                  participant.profilePhoto || 'https://via.placeholder.com/40'
+                }
+                alt={participant.userName}
+                className="w-10 h-10 rounded-full border-2 border-gray-800 object-cover"
+                style={{ zIndex: 3 - index }}
+              />
+              {onlineStatuses[participant._id] && (
+                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full">
+                  .
+                </span>
+              )}
+            </div>
+          ))}
+          {remainingParticipants > 0 && (
+            <div className="w-10 h-10 z-10 rounded-full flex items-center justify-center bg-gray-500 text-white text-sm font-bold border-2 border-gray-800">
+              +{remainingParticipants}
+            </div>
+          )}
+        </div>
+
+        <div className="w-10 h-10 md:w-12 md:h-12 bg-gray-200 rounded-full flex items-center justify-center  md:hidden">
+          <span className="text-sm font-medium text-gray-600">
+            {participants.length}
+          </span>
+        </div>
+      </>
     );
 
     const renderChatInfo = () => (
-      <div className="ml-4 flex-grow overflow-hidden">
+      <div className="ml-4 flex-grow overflow-hidden hidden lg:block">
         <h3 className="font-bold text-gray-800 truncate">
           {isGroupChat ? 'Grup' : participants[0].userName}
         </h3>

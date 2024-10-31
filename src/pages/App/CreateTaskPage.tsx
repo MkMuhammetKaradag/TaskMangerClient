@@ -135,87 +135,87 @@ const CreateTaskPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white p-8 rounded-lg shadow">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">
-            Create New Task
-          </h1>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <InputField
-              label="Task Title "
-              name="title"
-              type="title"
-              placeholder="task"
-              register={register}
-              error={errors.title?.message}
-            />
-            <TextAreaField
-              label="Task Description "
-              name="description"
-              rows={4}
-              placeholder="project description"
-              register={register}
-              error={errors.description?.message}
-            ></TextAreaField>
+      {/* <div className=""> */}
+      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          Create New Task
+        </h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <InputField
+            label="Task Title "
+            name="title"
+            type="title"
+            placeholder="task"
+            register={register}
+            error={errors.title?.message}
+          />
+          <TextAreaField
+            label="Task Description "
+            name="description"
+            rows={4}
+            placeholder="project description"
+            register={register}
+            error={errors.description?.message}
+          ></TextAreaField>
 
-            <SelectUserField
-              label="Task Assignee"
-              name="assigneeId"
+          <SelectUserField
+            label="Task Assignee"
+            name="assigneeId"
+            size={1}
+            register={register}
+            error={errors.assigneeId?.message}
+            multiple={false}
+            users={users}
+          ></SelectUserField>
+
+          <SelectProjectField
+            label="Task Project"
+            name="projectId"
+            size={1}
+            register={register}
+            error={errors.projectId?.message}
+            multiple={false}
+            projects={projects}
+          ></SelectProjectField>
+          <div className="grid md:grid-cols-2 grid-cols-1">
+            <SelectEnumField
+              label="Task status"
+              name="status"
               size={1}
               register={register}
-              error={errors.assigneeId?.message}
+              error={errors.status?.message}
               multiple={false}
-              users={users}
-            ></SelectUserField>
+              options={TaskStatus}
+            ></SelectEnumField>
 
-            <SelectProjectField
-              label="Task Project"
-              name="projectId"
+            <SelectEnumField
+              label="Task priority"
+              name="priority"
               size={1}
               register={register}
-              error={errors.projectId?.message}
+              error={errors.priority?.message}
               multiple={false}
-              projects={projects}
-            ></SelectProjectField>
-            <div className="grid md:grid-cols-2 grid-cols-1">
-              <SelectEnumField
-                label="Task status"
-                name="status"
-                size={1}
-                register={register}
-                error={errors.status?.message}
-                multiple={false}
-                options={TaskStatus}
-              ></SelectEnumField>
+              options={TaskPriority}
+            ></SelectEnumField>
+          </div>
+          <InputField
+            label=" Due Date "
+            name="dueDate"
+            type="date"
+            register={register}
+            error={errors.dueDate?.message}
+          />
+          {errors.root?.message && <FormError error={errors.root.message} />}
 
-              <SelectEnumField
-                label="Task priority"
-                name="priority"
-                size={1}
-                register={register}
-                error={errors.priority?.message}
-                multiple={false}
-                options={TaskPriority}
-              ></SelectEnumField>
-            </div>
-            <InputField
-              label=" Due Date "
-              name="dueDate"
-              type="date"
-              register={register}
-              error={errors.dueDate?.message}
-            />
-            {errors.root?.message && <FormError error={errors.root.message} />}
-
-            <SubmitButton
-              isValid={!!isFormValid}
-              isSubmitting={isSubmitting}
-              isLoading={mutationLoading}
-              label="Oluştur"
-            />
-          </form>
-        </div>
+          <SubmitButton
+            isValid={!!isFormValid}
+            isSubmitting={isSubmitting}
+            isLoading={mutationLoading}
+            label="Oluştur"
+          />
+        </form>
       </div>
+      {/* </div> */}
     </div>
   );
 };

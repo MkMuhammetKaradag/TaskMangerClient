@@ -136,80 +136,81 @@ const CreateProjectPage = () => {
     watch('endDate');
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white p-8 rounded-lg shadow">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">
-            Create New Project
-          </h1>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {/* <div className="">
+        <h1>sdnshd</h1> */}
+      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          Create New Project
+        </h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <InputField
+            label="Project Name "
+            name="name"
+            type="name"
+            placeholder="project"
+            register={register}
+            error={errors.name?.message}
+          />
+          <TextAreaField
+            label="Project Description "
+            name="description"
+            rows={4}
+            placeholder="project description"
+            register={register}
+            error={errors.description?.message}
+          ></TextAreaField>
+
+          <SelectUserField
+            label=" Project Manager"
+            name="projectManagerId"
+            size={1}
+            register={register}
+            error={errors.projectManagerId?.message}
+            multiple={false}
+            users={users.filter((user) =>
+              user.roles.some((role) =>
+                [UserRole.ADMIN, UserRole.EXECUTIVE].includes(role)
+              )
+            )}
+          ></SelectUserField>
+
+          <SelectUserField
+            label=" Project  Team Members"
+            name="teamMemberIds"
+            size={4}
+            register={register}
+            error={errors.teamMemberIds?.message}
+            multiple={true}
+            users={users}
+          ></SelectUserField>
+          <div className="flex justify-between">
             <InputField
-              label="Project Name "
-              name="name"
-              type="name"
-              placeholder="project"
+              label=" Start Date "
+              name="startDate"
+              type="date"
               register={register}
-              error={errors.name?.message}
+              error={errors.startDate?.message}
             />
-            <TextAreaField
-              label="Project Description "
-              name="description"
-              rows={4}
-              placeholder="project description"
+
+            <InputField
+              label=" End Date "
+              name="endDate"
+              type="date"
               register={register}
-              error={errors.description?.message}
-            ></TextAreaField>
-
-            <SelectUserField
-              label=" Project Manager"
-              name="projectManagerId"
-              size={1}
-              register={register}
-              error={errors.projectManagerId?.message}
-              multiple={false}
-              users={users.filter((user) =>
-                user.roles.some((role) =>
-                  [UserRole.ADMIN, UserRole.EXECUTIVE].includes(role)
-                )
-              )}
-            ></SelectUserField>
-
-            <SelectUserField
-              label=" Project  Team Members"
-              name="teamMemberIds"
-              size={4}
-              register={register}
-              error={errors.teamMemberIds?.message}
-              multiple={true}
-              users={users}
-            ></SelectUserField>
-            <div className="flex justify-between">
-              <InputField
-                label=" Start Date "
-                name="startDate"
-                type="date"
-                register={register}
-                error={errors.startDate?.message}
-              />
-
-              <InputField
-                label=" End Date "
-                name="endDate"
-                type="date"
-                register={register}
-                error={errors.endDate?.message}
-              />
-            </div>
-            {errors.root?.message && <FormError error={errors.root.message} />}
-
-            <SubmitButton
-              isValid={!!isFormValid}
-              isSubmitting={isSubmitting}
-              isLoading={mutationLoading}
-              label="Oluştur"
+              error={errors.endDate?.message}
             />
-          </form>
-        </div>
+          </div>
+          {errors.root?.message && <FormError error={errors.root.message} />}
+
+          <SubmitButton
+            isValid={!!isFormValid}
+            isSubmitting={isSubmitting}
+            isLoading={mutationLoading}
+            label="Oluştur"
+          />
+        </form>
       </div>
+      {/* </div> */}
     </div>
   );
 };
