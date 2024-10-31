@@ -12,9 +12,13 @@ import CreateProjectPage from '../../pages/App/CreateProjectPage';
 import CreateTaskPage from '../../pages/App/CreateTaskPage';
 import DirectPage from '../../pages/App/DirectPage';
 import ChatPage from '../../pages/App/ChatPage';
+import { useStatusUpdater } from '../../hooks/useStatusUpdater';
+import { useAutoLogout } from '../../hooks/useAutoLogout';
 
 const AppNavigator = () => {
   const location = useLocation();
+  useStatusUpdater();
+  useAutoLogout();
   const state = location.state as { backgroundLocation?: Location };
   return (
     <AppLayout>
