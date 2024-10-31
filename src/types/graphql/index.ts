@@ -1,8 +1,8 @@
 export enum ProjectStatus {
-  ACTIVE = 'active',
-  COMPLETED = 'completed',
-  ENDED = 'ended',
-  CANCELLED = 'cancelled',
+  ACTIVE = 'ACTIVE',
+  COMPLETED = 'COMPLETED',
+  ENDED = 'ENDED',
+  CANCELLED = 'CANCELLED',
 }
 export interface Project {
   _id: string;

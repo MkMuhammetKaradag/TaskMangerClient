@@ -1,8 +1,9 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_PROJECTS_BY_COMPANY } from '../../graphql/queries';
-import { Project } from '../../types/graphql';
+import { Project, ProjectStatus } from '../../types/graphql';
 import { useNavigate } from 'react-router-dom';
+import ProjectCard from '../../components/App/Projects/ProjectCard';
 
 interface ProjectsQueryResult {
   getAllProjectsByCompany: Project[];
@@ -10,7 +11,10 @@ interface ProjectsQueryResult {
 
 const ProjectsPage: React.FC = () => {
   const { data, loading, error } = useQuery<ProjectsQueryResult>(
-    GET_ALL_PROJECTS_BY_COMPANY
+    GET_ALL_PROJECTS_BY_COMPANY,
+    {
+      fetchPolicy: 'cache-first',
+    }
   );
   const navigate = useNavigate();
 
@@ -23,19 +27,17 @@ const ProjectsPage: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Projects</h1>
-      <ul>
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-8">Projects</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {data.getAllProjectsByCompany.map((project) => (
-          <li
-            onClick={() => openTasks(project._id)}
+          <ProjectCard
             key={project._id}
-            className="cursor-pointer"
-          >
-            {project.name}
-          </li>
+            project={project}
+            onClick={openTasks}
+          />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

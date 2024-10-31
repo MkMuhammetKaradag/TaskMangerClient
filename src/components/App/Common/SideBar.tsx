@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { LOGOUT_USER } from '../../../graphql/mutations';
 import SearchPanel from './SearchPanel';
 import { UserRole } from '../../../types/redux';
+import { IoChatbubbles, IoChatbubblesOutline } from 'react-icons/io5';
 
 // Types
 interface MenuItem {
@@ -58,9 +59,9 @@ const MENU_ITEMS: MenuItem[] = [
     link: '/tasks',
   },
   {
-    icon: AiFillShop,
-    outlineIcon: AiOutlineShop,
-    text: 'Company',
+    icon: IoChatbubbles,
+    outlineIcon: IoChatbubblesOutline,
+    text: 'Chats',
     link: '/direct',
   },
   {
