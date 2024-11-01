@@ -86,13 +86,13 @@ const MENU_ITEMS: MenuItem[] = [
     roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Admin, executive ve worker görebilir
   },
 
-  {
-    icon: AiOutlinePlus,
-    outlineIcon: AiOutlinePlus,
-    text: 'Create Chat',
-    link: '/create-chat',
-    roles: [UserRole.ADMIN, UserRole.EXECUTIVE], // Sadece admin ve executive görebilir
-  },
+  // {
+  //   icon: AiOutlinePlus,
+  //   outlineIcon: AiOutlinePlus,
+  //   text: 'Create Chat',
+  //   link: '/create-chat',
+  //   roles: [UserRole.ADMIN, UserRole.EXECUTIVE], // Sadece admin ve executive görebilir
+  // },
 ];
 
 const Sidebar: React.FC = () => {

@@ -74,15 +74,7 @@ const AppNavigator = () => {
               />
             }
           />
-          <Route
-            path="/create-chat"
-            element={
-              <RoleBasedRoute
-                element={<CreateChatPage />}
-                allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
-              />
-            }
-          />
+
           <Route
             path="/direct"
             element={
@@ -116,6 +108,16 @@ const AppNavigator = () => {
         </Routes>
         {state?.backgroundLocation && (
           <Routes>
+            <Route
+              path="/create-chat"
+              element={
+                <RoleBasedRoute
+                  element={<CreateChatPage />}
+                  allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
+                />
+              }
+            />
+
             <Route
               path="/p/:projectId/:segment"
               element={

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GET_USER_CHATS } from '../../../graphql/queries';
 import ChatParticipantCard from './ChatParticipantCard';
 import { useAppSelector } from '../../../redux/hooks';
@@ -30,6 +30,8 @@ interface ChatItem {
 const ChatList: React.FC = () => {
   const { chatId } = useParams<{ chatId?: string }>();
   const userRoles = useAppSelector((state) => state.auth.user?.roles);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { data, loading, error } = useQuery<{ getChats: ChatItem[] }>(
     GET_USER_CHATS
@@ -78,7 +80,11 @@ const ChatList: React.FC = () => {
         {userRoles && userRoles.includes(UserRole.ADMIN) && (
           <FaPlus
             onClick={() => {
-              // create new chat
+              navigate(`/create-chat`, {
+                state: {
+                  backgroundLocation: location,
+                },
+              });
             }}
             size={24}
             className="text-blue-500 cursor-pointer"

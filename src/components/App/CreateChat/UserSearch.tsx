@@ -102,12 +102,14 @@ const UserSearch: React.FC<UserSearchProps> = ({ onSelectUser }) => {
         placeholder="Ara"
         value={searchQuery}
         onChange={handleInputChange}
-        className="w-full p-2  "
+        className="w-80 p-2   border  rounded-md shadow-lg"
       />
       {loading && <p>Yükleniyor...</p>}
 
       {searchQuery.trim().length < 3 ? (
-        <p>Arama yapmak için en az 3 karakter girin</p>
+        <p className="text-gray-500">
+          Arama yapmak için en az 3 karakter girin
+        </p>
       ) : loading ? (
         <p>Aranıyor...</p>
       ) : data && data.searchUsers.users ? (

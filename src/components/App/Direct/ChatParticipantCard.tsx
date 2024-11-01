@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSubscription } from '@apollo/client';
 import { CHANGE_USER_STATUS_SUBSCRIPTION } from '../../../graphql/subscriptions';
+import { useAppSelector } from '../../../redux/hooks';
 
 interface Participant {
   _id: string;
@@ -25,6 +26,7 @@ const ChatParticipantCard: React.FC<ChatParticipantCardProps> = React.memo(
     const isGroupChat = participants.length > 1;
     const displayParticipants = participants.slice(0, 2);
     const remainingParticipants = participants.length - 2;
+    const user = useAppSelector((s) => s.auth.user);
 
     const [onlineStatuses, setOnlineStatuses] = useState<{
       [key: string]: boolean;
@@ -90,7 +92,11 @@ const ChatParticipantCard: React.FC<ChatParticipantCardProps> = React.memo(
     const renderChatInfo = () => (
       <div className="ml-4 flex-grow overflow-hidden hidden lg:block">
         <h3 className="font-bold text-gray-800 truncate">
-          {isGroupChat ? 'Grup' : participants[0].userName}
+          {isGroupChat
+            ? 'Grup'
+            : participants.length > 0
+            ? participants[0].userName
+            : user?.userName}
         </h3>
         {lastMessage && (
           <p className="text-gray-600 text-sm truncate">
@@ -108,7 +114,7 @@ const ChatParticipantCard: React.FC<ChatParticipantCardProps> = React.memo(
       >
         {isGroupChat ? (
           renderParticipantImages()
-        ) : (
+        ) : participants.length > 0 ? (
           <div className="relative">
             <img
               src={
@@ -120,6 +126,16 @@ const ChatParticipantCard: React.FC<ChatParticipantCardProps> = React.memo(
             {onlineStatuses[participants[0]._id] && (
               <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
             )}
+          </div>
+        ) : (
+          <div className="relative">
+            <img
+              src={user?.profilePhoto || 'https://via.placeholder.com/40'}
+              alt={user?.userName}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+
+            <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
           </div>
         )}
         {renderChatInfo()}
