@@ -3,14 +3,12 @@ import Tab from './Tab';
 
 const TabBar: FC<{
   activeTab: string;
+  tabs: {
+    label: string;
+    value: string;
+  }[];
   onTabChange: (tab: string) => void;
-}> = ({ activeTab, onTabChange }) => {
-  const tabs = [
-    { label: 'Project', value: 'project' },
-    { label: 'Team', value: 'team' },
-    { label: 'TaskSummary', value: 'taskSummary' },
-  ];
-
+}> = ({ activeTab, onTabChange, tabs }) => {
   return (
     <div className="flex justify-center space-x-3 border-b border-gray-300 py-2">
       <div className="flex w-full justify-between border-gray-700 mb-4">

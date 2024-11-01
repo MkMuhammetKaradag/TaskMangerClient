@@ -86,13 +86,17 @@ const ProjectDetailPage: FC = () => {
         return null;
     }
   };
-
+  const tabs = [
+    { label: 'Project', value: 'project' },
+    { label: 'Team', value: 'team' },
+    { label: 'TaskSummary', value: 'taskSummary' },
+  ];
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <CloseButton onClick={handleClose} />
       <div className="max-w-4xl w-full mx-auto h-[80vh] rounded-2xl bg-white overflow-hidden flex flex-col">
         <ModalHeader />
-        <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+        <TabBar activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
         <div className="flex-grow overflow-y-auto">{renderContent()}</div>
       </div>
     </div>

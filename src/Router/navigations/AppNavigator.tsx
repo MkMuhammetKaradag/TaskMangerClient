@@ -16,6 +16,8 @@ import { useStatusUpdater } from '../../hooks/useStatusUpdater';
 import { useAutoLogout } from '../../hooks/useAutoLogout';
 
 import CreateChatPage from '../../pages/App/CreateChatPage';
+import CompanyPage from '../../pages/App/CompanyPage';
+import CompanyJoinRequestsPage from '../../pages/App/CompanyJoinRequestsPage';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -37,6 +39,15 @@ const AppNavigator = () => {
             }
           />
           <Route
+            path="/company"
+            element={
+              <RoleBasedRoute
+                element={<CompanyPage />}
+                allowedRoles={[UserRole.ADMIN, UserRole.EXECUTIVE]}
+              />
+            }
+          />
+          <Route
             path="/project/:projectId/tasks"
             element={
               <RoleBasedRoute
@@ -52,25 +63,6 @@ const AppNavigator = () => {
               <RoleBasedRoute
                 element={<ProjectsPage />}
                 allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
-              />
-            }
-          />
-          <Route
-            path="/create-project"
-            element={
-              <RoleBasedRoute
-                element={<CreateProjectPage />}
-                allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
-              />
-            }
-          />
-
-          <Route
-            path="/create-task"
-            element={
-              <RoleBasedRoute
-                element={<CreateTaskPage />}
-                allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
               />
             }
           />
@@ -117,6 +109,24 @@ const AppNavigator = () => {
                 />
               }
             />
+            <Route
+              path="/create-project"
+              element={
+                <RoleBasedRoute
+                  element={<CreateProjectPage />}
+                  allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
+                />
+              }
+            />
+            <Route
+              path="/create-task"
+              element={
+                <RoleBasedRoute
+                  element={<CreateTaskPage />}
+                  allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
+                />
+              }
+            />
 
             <Route
               path="/p/:projectId/:segment"
@@ -133,6 +143,16 @@ const AppNavigator = () => {
                 <RoleBasedRoute
                   element={<TaskPage />}
                   allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
+                />
+              }
+            />
+
+            <Route
+              path="/company/join-requests/:companyId?"
+              element={
+                <RoleBasedRoute
+                  element={<CompanyJoinRequestsPage />}
+                  allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
                 />
               }
             />

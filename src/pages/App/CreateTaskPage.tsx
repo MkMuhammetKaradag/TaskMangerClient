@@ -18,6 +18,7 @@ import { User } from '../../types/redux';
 import { Project, TaskPriority, TaskStatus } from '../../types/graphql';
 import { GET_PROJECTS_BY_COMPANY } from '../../graphql/queries/getProjectByCompany';
 import { CREATE_TASK } from '../../graphql/mutations';
+import CloseButton from '../../components/App/Common/CloseButton';
 const TaskSchema = z.object({
   title: z
     .string()
@@ -132,11 +133,20 @@ const CreateTaskPage = () => {
     watch('dueDate');
   const users = usersData?.getCompanyUsers;
   const projects = projectsData?.getProjectsByCompany;
-
+  const handleClose = () => {
+    const backgroundLocation = location.state?.backgroundLocation;
+    navigate(backgroundLocation?.pathname || '/', { replace: true });
+  };
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      {/* <div className=""> */}
-      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 overflow-auto bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <CloseButton onClick={handleClose} />
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="max-w-screen-sm w-full mx-auto bg-white p-10  mt-10 rounded-lg shadow"
+      >
         <h1 className="text-2xl font-bold text-gray-900 mb-6">
           Create New Task
         </h1>

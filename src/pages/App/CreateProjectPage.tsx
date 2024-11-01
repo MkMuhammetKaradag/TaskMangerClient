@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,6 +14,7 @@ import {
 import { User, UserRole } from '../../types/redux';
 import { CREATE_PROJECT } from '../../graphql/mutations';
 import { GET_COMPANY_USERS } from '../../graphql/queries';
+import CloseButton from '../../components/App/Common/CloseButton';
 // Zod şeması
 const projectSchema = z
   .object({
@@ -67,6 +68,7 @@ interface CreateProjectOperationVariables {
 }
 const CreateProjectPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -134,12 +136,22 @@ const CreateProjectPage = () => {
     watch('teamMemberIds') &&
     watch('startDate') &&
     watch('endDate');
+  const handleClose = () => {
+    const backgroundLocation = location.state?.backgroundLocation;
+    navigate(backgroundLocation?.pathname || '/', { replace: true });
+  };
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      {/* <div className="">
-        <h1>sdnshd</h1> */}
-      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 overflow-auto bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <CloseButton onClick={handleClose} />
+      {/* <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8"> */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="max-w-screen-sm  p-10  mt-10 md:mt-0 w-full mx-auto bg-white  rounded-lg shadow"
+      >
+        <h1 className="text-2xl font-bold  text-gray-900 mb-6">
           Create New Project
         </h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

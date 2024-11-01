@@ -22,6 +22,7 @@ import { LOGOUT_USER } from '../../../graphql/mutations';
 import SearchPanel from './SearchPanel';
 import { UserRole } from '../../../types/redux';
 import { IoChatbubbles, IoChatbubblesOutline } from 'react-icons/io5';
+import { FaBuilding, FaRegBuilding } from 'react-icons/fa';
 
 // Types
 interface MenuItem {
@@ -29,6 +30,7 @@ interface MenuItem {
   outlineIcon: IconType;
   text: string;
   link: string;
+  backgroundLocation?: boolean;
   roles?: UserRole[]; // Hangi rollerin görebileceğini belirlemek için
 }
 
@@ -65,10 +67,17 @@ const MENU_ITEMS: MenuItem[] = [
     link: '/direct',
   },
   {
+    icon: FaBuilding,
+    outlineIcon: FaRegBuilding,
+    text: 'Company',
+    link: '/company',
+  },
+
+  {
     icon: AiOutlineBell,
     outlineIcon: AiOutlineBell,
-    text: 'Bildirimler',
-    link: '/notifications',
+    text: 'Notification',
+    link: '/notification',
   },
   // Yeni eklenen rol bazlı menü öğeleri
   {
@@ -76,6 +85,7 @@ const MENU_ITEMS: MenuItem[] = [
     outlineIcon: AiOutlinePlus,
     text: 'Create Project',
     link: '/create-project',
+    backgroundLocation: true,
     roles: [UserRole.ADMIN, UserRole.EXECUTIVE], // Sadece admin ve executive görebilir
   },
   {
@@ -83,6 +93,7 @@ const MENU_ITEMS: MenuItem[] = [
     outlineIcon: AiOutlinePlus,
     text: 'Create Task',
     link: '/create-task',
+    backgroundLocation: true,
     roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Admin, executive ve worker görebilir
   },
 
@@ -100,6 +111,7 @@ const Sidebar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const location = useLocation();
 
   // Hooks
   const user = useAppSelector((state) => state.auth.user);
@@ -155,6 +167,13 @@ const Sidebar: React.FC = () => {
     return (
       <Link
         key={index}
+        state={
+          item.backgroundLocation
+            ? {
+                backgroundLocation: location,
+              }
+            : undefined
+        }
         to={item.link === '/user' ? `/user/${user?._id}` : item.link}
         className={commonClasses}
       >

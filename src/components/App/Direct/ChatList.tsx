@@ -87,7 +87,7 @@ const ChatList: React.FC = () => {
               });
             }}
             size={24}
-            className="text-blue-500 cursor-pointer"
+            className="text-blue-400 cursor-pointer hover:text-blue-600 "
           />
         )}
       </div>
