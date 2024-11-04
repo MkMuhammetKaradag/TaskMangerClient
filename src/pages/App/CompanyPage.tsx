@@ -11,6 +11,8 @@ import {
 } from 'react-icons/bi';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../redux/hooks';
+import { UserRole } from '../../types/redux';
 
 interface Company {
   _id: string;
@@ -40,6 +42,8 @@ const CompanyPage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const roles = useAppSelector((state) => state.auth.user?.roles);
+
   // Normally you would fetch this data using Apollo Client
   const { loading, error, data } = useQuery(GET_COMPANY);
   if (loading) return <div>Yükleniyor...</div>;
@@ -104,31 +108,35 @@ const CompanyPage = () => {
             <h2 className="text-xl md:text-2xl font-semibold text-blue-600">
               {companyData.name}
             </h2>
-            <div className="relative">
-              <BsThreeDotsVertical
-                size={24}
-                className="text-lg text-gray-500 hover:text-gray-900 hover:cursor-pointer"
-                onClick={toggleDropdown}
-              />
-              {/* Dropdown Menu */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                  {dropdownMenuItems.map((item, index) => (
-                    <div
-                      key={index}
-                      className="px-4 py-3 hover:bg-gray-100 cursor-pointer flex items-center"
-                      onClick={() => {
-                        item.onClick();
-                        setIsDropdownOpen(false);
-                      }}
-                    >
-                      {item.icon}
-                      <span className="text-gray-800">{item.label}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            {[UserRole.ADMIN, UserRole.EXECUTIVE].every((role) =>
+              roles?.includes(role)
+            ) && (
+              <div className="relative">
+                <BsThreeDotsVertical
+                  size={24}
+                  className="text-lg text-gray-500 hover:text-gray-900 hover:cursor-pointer"
+                  onClick={toggleDropdown}
+                />
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    {dropdownMenuItems.map((item, index) => (
+                      <div
+                        key={index}
+                        className="px-4 py-3 hover:bg-gray-100 cursor-pointer flex items-center"
+                        onClick={() => {
+                          item.onClick();
+                          setIsDropdownOpen(false);
+                        }}
+                      >
+                        {item.icon}
+                        <span className="text-gray-800">{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Content */}

@@ -49,7 +49,7 @@ const Project = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  console.log(isPermission);
+  // console.log(isPermission);
   return (
     <div className="">
       <h1>Project Tasks</h1>

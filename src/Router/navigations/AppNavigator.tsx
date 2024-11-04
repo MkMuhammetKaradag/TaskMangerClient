@@ -43,7 +43,11 @@ const AppNavigator = () => {
             element={
               <RoleBasedRoute
                 element={<CompanyPage />}
-                allowedRoles={[UserRole.ADMIN, UserRole.EXECUTIVE]}
+                allowedRoles={[
+                  UserRole.ADMIN,
+                  UserRole.EXECUTIVE,
+                  UserRole.WORKER,
+                ]}
               />
             }
           />

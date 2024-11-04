@@ -71,6 +71,7 @@ const MENU_ITEMS: MenuItem[] = [
     outlineIcon: FaRegBuilding,
     text: 'Company',
     link: '/company',
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE,UserRole.WORKER], // Sadece admin ve executive görebilir
   },
 
   {
@@ -79,6 +80,7 @@ const MENU_ITEMS: MenuItem[] = [
     text: 'Notification',
     link: '/notification',
   },
+  
   // Yeni eklenen rol bazlı menü öğeleri
   {
     icon: AiOutlinePlus,
@@ -94,7 +96,7 @@ const MENU_ITEMS: MenuItem[] = [
     text: 'Create Task',
     link: '/create-task',
     backgroundLocation: true,
-    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Admin, executive ve worker görebilir
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE], // Admin, executive ve worker görebilir
   },
 
   // {
