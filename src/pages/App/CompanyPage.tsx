@@ -78,7 +78,7 @@ const CompanyPage = () => {
       label: 'Şirket Katılma İstekleri',
       onClick: () => {
         // Katılma istekleri sayfasına yönlendirme
-        navigate('/company/join-requests', {
+        navigate('/company/join-requests/6724cfaf805c7b135790b8f3', {
           state: { backgroundLocation: location },
         });
       },
