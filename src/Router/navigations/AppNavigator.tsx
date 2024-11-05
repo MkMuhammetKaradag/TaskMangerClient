@@ -39,7 +39,7 @@ const AppNavigator = () => {
             }
           />
           <Route
-            path="/company"
+            path="/company/:companyId?"
             element={
               <RoleBasedRoute
                 element={<CompanyPage />}
@@ -47,6 +47,7 @@ const AppNavigator = () => {
                   UserRole.ADMIN,
                   UserRole.EXECUTIVE,
                   UserRole.WORKER,
+                  UserRole.USER,
                 ]}
               />
             }

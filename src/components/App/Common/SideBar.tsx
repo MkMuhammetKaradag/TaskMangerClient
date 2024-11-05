@@ -53,25 +53,28 @@ const MENU_ITEMS: MenuItem[] = [
     outlineIcon: AiOutlineProject,
     text: 'Projects',
     link: '/projects',
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Sadece admin ve executive görebilir
   },
   {
     icon: RiTaskFill,
     outlineIcon: RiTaskLine,
     text: 'Tasks',
     link: '/tasks',
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Sadece admin ve executive görebilir
   },
   {
     icon: IoChatbubbles,
     outlineIcon: IoChatbubblesOutline,
     text: 'Chats',
     link: '/direct',
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Sadece admin ve executive görebilir
   },
   {
     icon: FaBuilding,
     outlineIcon: FaRegBuilding,
     text: 'Company',
     link: '/company',
-    roles: [UserRole.ADMIN, UserRole.EXECUTIVE,UserRole.WORKER], // Sadece admin ve executive görebilir
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Sadece admin ve executive görebilir
   },
 
   {
@@ -80,7 +83,7 @@ const MENU_ITEMS: MenuItem[] = [
     text: 'Notification',
     link: '/notification',
   },
-  
+
   // Yeni eklenen rol bazlı menü öğeleri
   {
     icon: AiOutlinePlus,

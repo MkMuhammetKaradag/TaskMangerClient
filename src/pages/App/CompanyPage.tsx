@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client';
+import { ApolloError, gql, useMutation, useQuery } from '@apollo/client';
 import React, { useState } from 'react';
 import {
   BiCalendar,
@@ -10,9 +10,10 @@ import {
   BiUser,
 } from 'react-icons/bi';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../redux/hooks';
 import { UserRole } from '../../types/redux';
+import { REQUEST_TO_JOIN_COMPANY } from '../../graphql/mutations/Company/RequestToJoinCompany';
 
 interface Company {
   _id: string;
@@ -25,31 +26,68 @@ interface Company {
 }
 
 const GET_COMPANY = gql`
-  query getCompanyByUser {
-    getCompanyByUser {
-      _id
-      name
-      address
-      phoneNumber
-      website
-      createdAt
-      updatedAt
+  query getCompanyByUser($companyId: String) {
+    getCompanyByUser(companyId: $companyId) {
+      company {
+        _id
+        name
+        address
+        phoneNumber
+        website
+        createdAt
+        updatedAt
+      }
+      ShowCompanyjoinButton
     }
   }
 `;
 
 const CompanyPage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { companyId } = useParams<{
+    companyId: string;
+  }>();
   const navigate = useNavigate();
   const location = useLocation();
   const roles = useAppSelector((state) => state.auth.user?.roles);
 
   // Normally you would fetch this data using Apollo Client
-  const { loading, error, data } = useQuery(GET_COMPANY);
+  const { loading, error, data } = useQuery(GET_COMPANY, {
+    variables: { companyId },
+  });
+
+  const [
+    requestToJoinCompany,
+    { loading: loadingMutation, error: errorMutation },
+  ] = useMutation(REQUEST_TO_JOIN_COMPANY);
+
+  const handleJoinCompany = async () => {
+    try {
+      if (companyId) {
+        await requestToJoinCompany({
+          variables: { companyId },
+        });
+      } else {
+        alert('company   not found');
+      }
+    } catch (err: any) {
+      if (err.graphQLErrors && err.graphQLErrors.length > 0) {
+        // GraphQL hata mesajını alın ve gösterin
+        alert(err.graphQLErrors[0].message);
+      } else {
+        // Genel hata mesajını gösterin
+        alert(err.message || 'An error occurred');
+      }
+      console.error('Error joining company:', err);
+    }
+  };
   if (loading) return <div>Yükleniyor...</div>;
   if (error) return <div>Hata: {error.message}</div>;
+  if (!data) return <div>data is null</div>;
 
-  const companyData = data.getCompanyByUser as Company;
+  const companyData = data.getCompanyByUser.company as Company;
+  const showCompanyjoinButton = data.getCompanyByUser
+    .ShowCompanyjoinButton as Boolean;
   const formatDate = (dateString: string) => {
     return new Date(+dateString).toLocaleDateString('tr-TR', {
       year: 'numeric',
@@ -82,7 +120,7 @@ const CompanyPage = () => {
       label: 'Şirket Katılma İstekleri',
       onClick: () => {
         // Katılma istekleri sayfasına yönlendirme
-        navigate('/company/join-requests/6724cfaf805c7b135790b8f3', {
+        navigate('/company/join-requests', {
           state: { backgroundLocation: location },
         });
       },
@@ -108,6 +146,12 @@ const CompanyPage = () => {
             <h2 className="text-xl md:text-2xl font-semibold text-blue-600">
               {companyData.name}
             </h2>
+            {showCompanyjoinButton && (
+              <button onClick={handleJoinCompany} disabled={loadingMutation}>
+                {loadingMutation ? 'Joining...' : 'Join Company'}
+              </button>
+            )}
+
             {[UserRole.ADMIN, UserRole.EXECUTIVE].every((role) =>
               roles?.includes(role)
             ) && (
