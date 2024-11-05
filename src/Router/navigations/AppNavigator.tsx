@@ -77,7 +77,7 @@ const AppNavigator = () => {
             element={
               <RoleBasedRoute
                 element={<DirectPage />}
-                allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
+                allowedRoles={[UserRole.USER]}
               />
             }
           >
@@ -94,7 +94,7 @@ const AppNavigator = () => {
               element={
                 <RoleBasedRoute
                   element={<ChatPage />}
-                  allowedRoles={[UserRole.WORKER, UserRole.ADMIN]}
+                  allowedRoles={[UserRole.USER, UserRole.ADMIN]}
                 />
               }
             />

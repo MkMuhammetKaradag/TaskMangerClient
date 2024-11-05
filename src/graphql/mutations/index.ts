@@ -21,3 +21,5 @@ export * from './Chat/MarkMessagesAsRead';
 
 //COMPANY
 export * from './Company/RespondToJoinRequest';
+export * from './Company/RequestToJoinCompany';
+export * from './Company/CancelJoinCompanyRequest';

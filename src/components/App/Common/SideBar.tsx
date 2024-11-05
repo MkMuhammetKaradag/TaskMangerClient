@@ -67,7 +67,7 @@ const MENU_ITEMS: MenuItem[] = [
     outlineIcon: IoChatbubblesOutline,
     text: 'Chats',
     link: '/direct',
-    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Sadece admin ve executive görebilir
+    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER, UserRole.USER], // Sadece admin ve executive görebilir
   },
   {
     icon: FaBuilding,
