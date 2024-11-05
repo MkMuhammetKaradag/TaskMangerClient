@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { TaskDetail, TaskPriority, TaskStatus } from '../../../types/graphql';
 import { User } from '../../../types/redux';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_COMPANY_USERS } from '../../../graphql/queries';
+import { GET_COMPANY_USERS, GET_TASK } from '../../../graphql/queries';
 import { CREATE_TASK } from '../../../graphql/mutations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -15,6 +15,7 @@ import {
   SubmitButton,
   TextAreaField,
 } from '../../Auth/FormComponents';
+import { UPDATE_TASK } from '../../../graphql/mutations/Tasks/TaskUpdate';
 const TaskSchema = (defaultDueDate: string) =>
   z.object({
     title: z
@@ -25,7 +26,7 @@ const TaskSchema = (defaultDueDate: string) =>
       .string()
       .min(10, 'Description must be at least 10 characters')
       .max(1000, 'Description must be less than 1000 characters'),
-    assigneeId: z.string().min(1, 'Project manager selection is required'),
+    assignee: z.string().min(1, 'Project manager selection is required'),
     status: z.nativeEnum(TaskStatus), // TaskStatus enum'unu Zod şemasında kullanma
     priority: z.nativeEnum(TaskPriority), // TaskPriority enum'unu Zod şemasında kullanma
     dueDate: z
@@ -52,15 +53,6 @@ interface GetCompanyUsersQueryResult {
   getCompanyUsers: User[];
 }
 
-interface CreateTaskMutationResult {
-  createTask: {
-    _id: string;
-  };
-}
-
-interface CreateTaskOperationVariables {
-  input: TaskFormData;
-}
 interface TaskUpdateFormProps {
   taskData: TaskDetail;
 }
@@ -68,15 +60,14 @@ const TaskUpdateForm: FC<TaskUpdateFormProps> = ({ taskData }) => {
   const { data: usersData, loading: usersLoading } =
     useQuery<GetCompanyUsersQueryResult>(GET_COMPANY_USERS);
 
-  const [createTask, { loading: mutationLoading }] = useMutation<
-    CreateTaskMutationResult,
-    CreateTaskOperationVariables
-  >(CREATE_TASK, {
-    // onCompleted: (res) => {
-    //   navigate(`/task/${res.createTask._id}`, {
-    //     state: { backgroundLocation: location },
-    //   });
-    // },
+  const [updateTask, { loading: mutationLoading }] = useMutation(UPDATE_TASK, {
+    refetchQueries: [
+      {
+        query: GET_TASK,
+        variables: { taskId: taskData._id },
+      },
+    ],
+
     onError: (error) => {
       console.error('Error creating project:', error);
     },
@@ -95,31 +86,29 @@ const TaskUpdateForm: FC<TaskUpdateFormProps> = ({ taskData }) => {
     defaultValues: {
       title: taskData.title,
       description: taskData.description,
-      assigneeId: taskData.assignee._id,
+      assignee: taskData.assignee._id,
       dueDate: new Date(+taskData.dueDate).toLocaleDateString('en-CA'),
       priority: taskData.priority,
       status: taskData.status,
     },
   });
   const onSubmit = async (data: TaskFormData) => {
-    console.log({
-      ...data,
-      dueDate: new Date(data.dueDate).toLocaleDateString('tr-TR'),
-    });
 
-    // try {
-    //   await createTask({
-    //     variables: {
-    //       input: {
-    //         ...data,
-    //         dueDate: new Date(data.dueDate).toLocaleDateString('tr-TR'),
-    //       },
-    //     },
-    //   });
-    //   reset();
-    // } catch (error) {
-    //   console.error('Form submission error:', error);
-    // }
+
+    try {
+      await updateTask({
+        variables: {
+          input: {
+            taskId: taskData._id,
+            ...data,
+            dueDate: new Date(data.dueDate).toLocaleDateString('tr-TR'),
+          },
+        },
+      });
+      // reset();
+    } catch (error) {
+      console.error('Form submission error:', error);
+    }
   };
   if (usersLoading) {
     return (
@@ -135,7 +124,7 @@ const TaskUpdateForm: FC<TaskUpdateFormProps> = ({ taskData }) => {
   const isFormValid =
     watch('title') !== taskData.title ||
     watch('description') !== taskData.description ||
-    watch('assigneeId') !== taskData.assignee._id ||
+    watch('assignee') !== taskData.assignee._id ||
     watch('status') !== taskData.status ||
     watch('priority') !== taskData.priority ||
     watch('dueDate') !==
@@ -165,10 +154,10 @@ const TaskUpdateForm: FC<TaskUpdateFormProps> = ({ taskData }) => {
 
         <SelectUserField
           label="Task Assignee"
-          name="assigneeId"
+          name="assignee"
           size={1}
           register={register}
-          error={errors.assigneeId?.message}
+          error={errors.assignee?.message}
           multiple={false}
           users={users}
         ></SelectUserField>
