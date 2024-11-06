@@ -27,12 +27,12 @@ export const TaskColumn = ({ status, tasks }: TaskColumnProps) => {
           ${isOver ? 'bg-gray-200 ring-2 ring-blue-400 ring-inset' : ''}
         `}
     >
-      <h2 className="text-lg z-40 fixed font-semibold">{status}</h2>
+      <h2 className="text-lg   font-semibold">{status}</h2>
       <SortableContext
         items={tasks.map((task) => task._id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="flex mt-5 flex-col">
+        <div className="flex mt-1 flex-col">
           {tasks.map((task) => (
             <SortableTaskCard key={task._id} task={task} />
           ))}

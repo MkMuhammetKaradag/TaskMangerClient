@@ -3,6 +3,7 @@ import { gql, useMutation } from '@apollo/client';
 import UserSearch from '../../components/App/CreateChat/UserSearch';
 import CloseButton from '../../components/App/Common/CloseButton';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { GET_USER_CHATS } from '../../graphql/queries';
 
 const CREATE_CHAT = gql`
   mutation CreateChat($input: CreateChatInput!) {
@@ -19,9 +20,20 @@ interface User {
 
 const CreateChatPage: React.FC = () => {
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-  const [createChat, { loading, error }] = useMutation(CREATE_CHAT);
+  const [chatName, setChatName] = useState('');
+  const [createChat, { loading, error }] = useMutation(CREATE_CHAT, {
+    refetchQueries: [
+      {
+        query: GET_USER_CHATS, // Tekrar çalıştırılacak sorgu
+      },
+    ],
+  });
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChatName(e.target.value);
+  };
 
   const handleUserSelect = (user: User) => {
     setSelectedUsers((prevUsers) =>
@@ -38,6 +50,7 @@ const CreateChatPage: React.FC = () => {
         variables: {
           input: {
             participants: participantIds,
+            chatName: chatName,
           },
         },
       });
@@ -63,8 +76,15 @@ const CreateChatPage: React.FC = () => {
         <div className="flex justify-center p-2 items-center mb-4">
           <h2 className="text-xl font-bold">Yeni Sohbet Oluştu</h2>
         </div>
-
+        <input
+          type="text"
+          placeholder="Chat Name"
+          value={chatName}
+          onChange={handleInputChange}
+          className="w-80 p-2  mb-3  border  rounded-md shadow-lg"
+        />
         <UserSearch onSelectUser={handleUserSelect} />
+
         <div className="p-3">
           {selectedUsers.map((user) => (
             <div

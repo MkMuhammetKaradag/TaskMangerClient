@@ -3,6 +3,7 @@ export const GET_USER_CHATS = gql`
   query GetChats {
     getChats {
       _id
+      chatName
       participants {
         _id
         userName

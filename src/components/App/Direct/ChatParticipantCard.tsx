@@ -11,6 +11,7 @@ interface Participant {
 }
 
 interface ChatParticipantCardProps {
+  chatName: string | null;
   participants: Participant[];
   status: boolean;
   lastMessage: {
@@ -22,7 +23,7 @@ interface ChatParticipantCardProps {
 }
 
 const ChatParticipantCard: React.FC<ChatParticipantCardProps> = React.memo(
-  ({ participants, status, lastMessage }) => {
+  ({ participants, status, lastMessage, chatName }) => {
     const isGroupChat = participants.length > 1;
     const displayParticipants = participants.slice(0, 2);
     const remainingParticipants = participants.length - 2;
@@ -92,11 +93,14 @@ const ChatParticipantCard: React.FC<ChatParticipantCardProps> = React.memo(
     const renderChatInfo = () => (
       <div className="ml-4 flex-grow overflow-hidden hidden lg:block">
         <h3 className="font-bold text-gray-800 truncate">
-          {isGroupChat
+          {chatName
+            ? chatName
+            : isGroupChat
             ? 'Grup'
             : participants.length > 0
             ? participants[0].userName
             : user?.userName}
+          {}
         </h3>
         {lastMessage && (
           <p className="text-gray-600 text-sm truncate">

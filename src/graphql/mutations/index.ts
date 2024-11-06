@@ -18,6 +18,7 @@ export * from './Project/CreateProject';
 export * from './Chat/GenerateSignedUploadUrl';
 export * from './Chat/AddMessageToChat';
 export * from './Chat/MarkMessagesAsRead';
+export * from './Chat/LeaveChat';
 
 //COMPANY
 export * from './Company/RespondToJoinRequest';

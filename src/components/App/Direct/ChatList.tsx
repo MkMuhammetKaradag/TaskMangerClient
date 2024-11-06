@@ -23,6 +23,7 @@ interface LastMessage {
 
 interface ChatItem {
   _id: string;
+  chatName: string | null;
   participants: Participant[];
   lastMessage: LastMessage | null;
 }
@@ -54,12 +55,14 @@ const ChatList: React.FC = () => {
           <li key={chat._id}>
             <Link
               to={`/direct/t/${chat._id}`}
+              state={{ chatName: chat.chatName }}
               className={`block p-1 mb-3 transition-colors ${
                 chat._id === chatId ? 'bg-blue-100' : 'hover:bg-gray-100'
               }`}
             >
               {/* <div>{chat.participants.length}</div> */}
               <ChatParticipantCard
+                chatName={chat.chatName}
                 participants={chat.participants}
                 status={chat._id === chatId}
                 lastMessage={chat.lastMessage}
@@ -77,19 +80,22 @@ const ChatList: React.FC = () => {
         <h2 className="text-xl font-bold p-4 sticky top-0 bg-white z-10 ">
           Mesajlar
         </h2>
-        {userRoles && userRoles.includes(UserRole.ADMIN) && (
-          <FaPlus
-            onClick={() => {
-              navigate(`/create-chat`, {
-                state: {
-                  backgroundLocation: location,
-                },
-              });
-            }}
-            size={24}
-            className="text-blue-400 cursor-pointer hover:text-blue-600 "
-          />
-        )}
+        {userRoles &&
+          userRoles.some((role) =>
+            [UserRole.ADMIN, UserRole.EXECUTIVE].includes(role)
+          ) && (
+            <FaPlus
+              onClick={() => {
+                navigate(`/create-chat`, {
+                  state: {
+                    backgroundLocation: location,
+                  },
+                });
+              }}
+              size={24}
+              className="text-blue-400 cursor-pointer hover:text-blue-600 "
+            />
+          )}
       </div>
 
       {renderedContent}

@@ -99,7 +99,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ onSelectUser }) => {
     <div>
       <input
         type="text"
-        placeholder="Ara"
+        placeholder="User Search"
         value={searchQuery}
         onChange={handleInputChange}
         className="w-80 p-2   border  rounded-md shadow-lg"
