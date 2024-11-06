@@ -4,6 +4,7 @@ export const GET_USER_CHATS = gql`
     getChats {
       _id
       chatName
+      isAdmin
       participants {
         _id
         userName

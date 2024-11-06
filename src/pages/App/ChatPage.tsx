@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdVideoCall } from 'react-icons/md';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -8,17 +8,19 @@ import { BiCog, BiLinkAlt, BiUser } from 'react-icons/bi';
 import { LEAVE_CHAT_MUTATION } from '../../graphql/mutations';
 import { useMutation } from '@apollo/client';
 import { GET_USER_CHATS } from '../../graphql/queries';
+import ChatSettingModal from '../../components/App/Chat/ChatSettingModal';
 
 const ChatPage = () => {
   const { chatId } = useParams<{ chatId: string }>();
   const location = useLocation();
   const chatName = location.state?.chatName as string | null; // Gönderilen mesajı al
+  const isAdmin = location.state?.isAdmin as boolean; // Gönderilen mesajı al
   if (!chatId) {
     return <div className="text-center p-4">Sohbet bulunamadı</div>;
   }
   return (
     <div className="flex flex-col h-[95vh]">
-      <ChatHeader chatId={chatId} chatName={chatName} />
+      <ChatHeader chatId={chatId} chatName={chatName} isAdmin={isAdmin} />
       <Messages chatId={chatId} />
       <MessageInput chatId={chatId} />
     </div>
@@ -28,10 +30,16 @@ const ChatPage = () => {
 interface ChatHeaderProps {
   chatId: string;
   chatName: string | null;
+  isAdmin: boolean;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ chatId, chatName }) => {
+const ChatHeader: React.FC<ChatHeaderProps> = ({
+  chatId,
+  chatName,
+  isAdmin,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [leaveChat, { loading, error }] = useMutation(LEAVE_CHAT_MUTATION, {
     refetchQueries: [
       {
@@ -43,15 +51,21 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ chatId, chatName }) => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+  const handleCloseModal = useCallback(() => {
+    setShowModal(false);
+  }, []);
 
+  const handleOpenModal = useCallback(() => {
+    setShowModal(true);
+  }, []);
   const handleLeaveChat = async () => {
     try {
-      console.log('neber');
       await leaveChat({
         variables: {
           chatId,
         },
       });
+      setIsDropdownOpen(false);
       navigate('/direct');
       console.log("Chat'ten başarıyla ayrıldınız.");
     } catch (err) {
@@ -62,10 +76,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ chatId, chatName }) => {
     {
       icon: <BiCog className="w-5 h-5 mr-2" />,
       label: 'Ayarlar',
-      onClick: () => {
-        // Ayarlar sayfasına yönlendirme veya modal açma
-        console.log('Ayarlar tıklandı');
-      },
+      onClick: () => handleOpenModal(),
     },
     {
       icon: <BiUser className="w-5 h-5 mr-2" />,
@@ -95,7 +106,11 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ chatId, chatName }) => {
           size={30}
         />
         <div onClick={(e) => e.stopPropagation()} className="relative">
-          <BsThreeDotsVertical onClick={toggleDropdown} size={30} />
+          <BsThreeDotsVertical
+            className={'cursor-pointer'}
+            onClick={toggleDropdown}
+            size={30}
+          />
           {isDropdownOpen && (
             <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
               {dropdownMenuItems.map((item, index) => (
@@ -117,6 +132,15 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ chatId, chatName }) => {
           )}
         </div>
       </div>
+
+      {showModal && (
+        <ChatSettingModal
+          onClose={handleCloseModal}
+          chatId={chatId}
+          chatName={chatName}
+          isAdmin={isAdmin}
+        />
+      )}
     </div>
   );
 };

@@ -6,6 +6,7 @@ import ChatParticipantCard from './ChatParticipantCard';
 import { useAppSelector } from '../../../redux/hooks';
 import { UserRole } from '../../../types/redux';
 import { FaPlus } from 'react-icons/fa';
+import { boolean } from 'zod';
 
 interface Participant {
   _id: string;
@@ -26,6 +27,7 @@ interface ChatItem {
   chatName: string | null;
   participants: Participant[];
   lastMessage: LastMessage | null;
+  isAdmin: boolean;
 }
 
 const ChatList: React.FC = () => {
@@ -55,7 +57,7 @@ const ChatList: React.FC = () => {
           <li key={chat._id}>
             <Link
               to={`/direct/t/${chat._id}`}
-              state={{ chatName: chat.chatName }}
+              state={{ chatName: chat.chatName, isAdmin: chat.isAdmin }}
               className={`block p-1 mb-3 transition-colors ${
                 chat._id === chatId ? 'bg-blue-100' : 'hover:bg-gray-100'
               }`}

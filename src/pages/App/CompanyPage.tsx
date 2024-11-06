@@ -199,7 +199,7 @@ const CompanyPage = () => {
                 </button>
               )}
 
-              {[UserRole.ADMIN, UserRole.EXECUTIVE].every((role) =>
+              {[UserRole.ADMIN, UserRole.EXECUTIVE].some((role) =>
                 roles?.includes(role)
               ) && (
                 <div className="relative">
