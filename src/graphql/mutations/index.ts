@@ -19,6 +19,10 @@ export * from './Chat/GenerateSignedUploadUrl';
 export * from './Chat/AddMessageToChat';
 export * from './Chat/MarkMessagesAsRead';
 export * from './Chat/LeaveChat';
+export * from './Chat/AddChatAdmin';
+export * from './Chat/RemoveChatAdmin';
+export * from './Chat/RemoveChatParticipant';
+export * from './Chat/AddChatParticipant';
 
 //COMPANY
 export * from './Company/RespondToJoinRequest';

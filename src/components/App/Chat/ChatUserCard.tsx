@@ -2,38 +2,13 @@ import { gql, useMutation } from '@apollo/client';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { BiCog, BiLinkAlt, BiUser } from 'react-icons/bi';
 import { GET_CHAT_USERS } from './ChatUsersModal';
+import {
+  ADD_CHAT_ADMIN,
+  REMOVE_CHAT_ADMIN,
+  REMOVE_CHAT_PARTICIPANT,
+} from '../../../graphql/mutations';
+import { GET_USER_CHATS } from '../../../graphql/queries';
 
-const ADD_CHAT_ADMIN = gql`
-  mutation AddChatAdmin($chatId: String!, $userId: String!) {
-    addChatAdmin(chatId: $chatId, userId: $userId) {
-      _id
-    }
-  }
-`;
-
-const REMOVE_CHAT_ADMIN = gql`
-  mutation RemoveChatAdmin($chatId: String!, $userId: String!) {
-    removeChatAdmin(chatId: $chatId, userId: $userId) {
-      _id
-    }
-  }
-`;
-
-const REMOVE_CHAT_PARTICIPANT = gql`
-  mutation RemoveChatParticipant($chatId: String!, $userId: String!) {
-    removeChatParticipant(chatId: $chatId, userId: $userId) {
-      _id
-    }
-  }
-`;
-
-const ADD_CHAT_PARTICIPANT = gql`
-  mutation AddChatParticipant($chatId: String!, $userId: String!) {
-    addChatParticipant(chatId: $chatId, userId: $userId) {
-      _id
-    }
-  }
-`;
 
 interface ChatUserCardProps {
   isAdmin: boolean;
@@ -123,7 +98,6 @@ const ChatUserCard: FC<ChatUserCardProps> = ({
   };
 
   const handleRemoveParticipant = async () => {
-    console.log('hello');
     if (
       window.confirm(
         `Are you sure you want to remove ${participant.userName} from the chat?`
