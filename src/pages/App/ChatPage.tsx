@@ -9,6 +9,7 @@ import { LEAVE_CHAT_MUTATION } from '../../graphql/mutations';
 import { useMutation } from '@apollo/client';
 import { GET_USER_CHATS } from '../../graphql/queries';
 import ChatSettingModal from '../../components/App/Chat/ChatSettingModal';
+import ChatUsersModal from '../../components/App/Chat/ChatUsersModal';
 
 const ChatPage = () => {
   const { chatId } = useParams<{ chatId: string }>();
@@ -39,7 +40,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   isAdmin,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showSettingModal, setShowSettingModal] = useState(false);
+  const [showUsersModal, setShowUsersModal] = useState(false);
+
   const [leaveChat, { loading, error }] = useMutation(LEAVE_CHAT_MUTATION, {
     refetchQueries: [
       {
@@ -51,12 +54,20 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-  const handleCloseModal = useCallback(() => {
-    setShowModal(false);
+  const handleCloseSettingModal = useCallback(() => {
+    setShowSettingModal(false);
   }, []);
 
-  const handleOpenModal = useCallback(() => {
-    setShowModal(true);
+  const handleOpenSettingModal = useCallback(() => {
+    setShowSettingModal(true);
+  }, []);
+
+  const handleCloseUsersModal = useCallback(() => {
+    setShowUsersModal(false);
+  }, []);
+
+  const handleOpenUsersModal = useCallback(() => {
+    setShowUsersModal(true);
   }, []);
   const handleLeaveChat = async () => {
     try {
@@ -76,15 +87,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
     {
       icon: <BiCog className="w-5 h-5 mr-2" />,
       label: 'Ayarlar',
-      onClick: () => handleOpenModal(),
+      onClick: () => handleOpenSettingModal(),
     },
     {
       icon: <BiUser className="w-5 h-5 mr-2" />,
       label: 'kişiler',
-      onClick: () => {
-        // Kullanıcı yönetimi sayfasına yönlendirme
-        console.log('Kullanıcılar tıklandı');
-      },
+      onClick: () => handleOpenUsersModal(),
     },
     {
       icon: <BiLinkAlt className="w-5 h-5 mr-2" />,
@@ -133,13 +141,21 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         </div>
       </div>
 
-      {showModal && (
+      {showSettingModal && (
         <ChatSettingModal
-          onClose={handleCloseModal}
+          onClose={handleCloseSettingModal}
           chatId={chatId}
           chatName={chatName}
           isAdmin={isAdmin}
         />
+      )}
+      {showUsersModal && (
+        <ChatUsersModal
+          onClose={handleCloseUsersModal}
+          chatId={chatId}
+          chatName={chatName}
+          isAdmin={isAdmin}
+        ></ChatUsersModal>
       )}
     </div>
   );
