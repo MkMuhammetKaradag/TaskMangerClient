@@ -2,7 +2,8 @@ import React, { FC, useState } from 'react';
 import CloseButton from '../Common/CloseButton';
 import { gql, useMutation } from '@apollo/client';
 import { GET_USER_CHATS } from '../../../graphql/queries';
-import { UPDATE_CHAT_NAME } from '../../../graphql/mutations';
+import { FREEZE_CHAT, UPDATE_CHAT_NAME } from '../../../graphql/mutations';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatSettingProps {
   onClose: () => void;
@@ -18,6 +19,7 @@ const ChatSettingModal: FC<ChatSettingProps> = ({
   isAdmin,
 }) => {
   const [chatNameInput, setChatNameInput] = useState('');
+  const navigate = useNavigate();
   const [updateChatName, { loading: updateChatNameLoading }] = useMutation(
     UPDATE_CHAT_NAME,
     {
@@ -26,8 +28,23 @@ const ChatSettingModal: FC<ChatSettingProps> = ({
           query: GET_USER_CHATS,
         },
       ],
+      onCompleted: () => {
+        navigate('/direct');
+      },
     }
   );
+
+  const [freezeChat, { loading: freezeChatLoading }] = useMutation(
+    FREEZE_CHAT,
+
+    {
+      refetchQueries: [{ query: GET_USER_CHATS }],
+      onCompleted: () => {
+        navigate('/direct');
+      },
+    }
+  );
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChatNameInput(e.target.value);
   };
@@ -44,7 +61,14 @@ const ChatSettingModal: FC<ChatSettingProps> = ({
       console.error('Error updating chat name:', error);
     }
   };
-
+  const handleFreezeChat = async () => {
+    try {
+      await freezeChat({ variables: { chatId } });
+      alert('Chat has been frozen');
+    } catch (error) {
+      console.error('Error freezing chat:', error);
+    }
+  };
   return (
     <div
       onClick={onClose}
@@ -60,9 +84,13 @@ const ChatSettingModal: FC<ChatSettingProps> = ({
         </h2>
         {isAdmin && (
           <div className="mt-2">
-            <div className="border-b p-3 hover:bg-blue-300  hover:cursor-pointer text-white bg-blue-200 rounded-md shadow-lg my-3  flex  items-center  justify-center">
+            <button
+              disabled={freezeChatLoading}
+              onClick={handleFreezeChat}
+              className="border-b p-3 w-full hover:bg-blue-300  hover:cursor-pointer text-white bg-blue-200 rounded-md shadow-lg my-3  flex  items-center  justify-center"
+            >
               Freeze Chat
-            </div>
+            </button>
             <div className="border-b p-3   flex  items-center  justify-center ">
               <input
                 type="text"

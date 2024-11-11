@@ -10,8 +10,8 @@ import {
   SelectUserField,
   SubmitButton,
   TextAreaField,
-} from '../../components/Auth/FormComponents';
-import { User, UserRole } from '../../types/redux';
+} from '../../components/Auth/FormComponen';
+import { User, UserRole } from '../../types/redu';
 import { CREATE_PROJECT } from '../../graphql/mutations';
 import { GET_COMPANY_USERS } from '../../graphql/queries';
 // Zod şeması
