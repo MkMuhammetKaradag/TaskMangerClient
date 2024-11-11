@@ -24,7 +24,7 @@ const Messages: React.FC<MessagesProps> = ({ chatId }) => {
   const [loadMessages, { loading, data, subscribeToMore }] = useLazyQuery(
     GET_CHAT_MESSAGES,
     {
-      variables: { input: { chatId, page, limit: 10, extraPassValue: 0 } },
+      variables: { input: { chatId, page, limit: 15, extraPassValue: 0 } },
       fetchPolicy: 'network-only',
       onCompleted(data) {
         if (data?.getChatMessages?.messages && user?._id) {
@@ -77,7 +77,7 @@ const Messages: React.FC<MessagesProps> = ({ chatId }) => {
       setPage((prevPage) => prevPage + 1);
       loadMessages({
         variables: {
-          input: { chatId, page: page + 1, limit: 10, extraPassValue },
+          input: { chatId, page: page + 1, limit: 15, extraPassValue },
         },
       });
     }

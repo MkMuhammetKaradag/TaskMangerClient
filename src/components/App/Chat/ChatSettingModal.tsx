@@ -4,6 +4,7 @@ import { gql, useMutation } from '@apollo/client';
 import { GET_USER_CHATS } from '../../../graphql/queries';
 import { FREEZE_CHAT, UPDATE_CHAT_NAME } from '../../../graphql/mutations';
 import { useNavigate } from 'react-router-dom';
+import { MARK_CHAT_MESSAGES_AS_READ } from '../../../graphql/mutations/Chat/MarkChatMessagesAsRead';
 
 interface ChatSettingProps {
   onClose: () => void;
@@ -45,6 +46,14 @@ const ChatSettingModal: FC<ChatSettingProps> = ({
     }
   );
 
+  const [markChatMessagesAsRead, { loading: markChatMessagesAsReadLoading }] =
+    useMutation(MARK_CHAT_MESSAGES_AS_READ, {
+      variables: { chatId },
+      onCompleted: () => {
+        alert('All messages marked as read');
+      },
+    });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChatNameInput(e.target.value);
   };
@@ -69,6 +78,15 @@ const ChatSettingModal: FC<ChatSettingProps> = ({
       console.error('Error freezing chat:', error);
     }
   };
+
+  const handleMarkMessagesAsRead = async () => {
+    try {
+      await markChatMessagesAsRead();
+    } catch (error) {
+      console.error('Error marking messages as read:', error);
+    }
+  };
+
   return (
     <div
       onClick={onClose}
@@ -114,7 +132,11 @@ const ChatSettingModal: FC<ChatSettingProps> = ({
         )}
         <div className="border-b p-3  gap-x-3  flex  items-center  justify-center">
           <div>Mark all messages as read </div>
-          <button className="bg-blue-200 p-2 rounded-md text-white hover:bg-blue-300 ">
+          <button
+            onClick={handleMarkMessagesAsRead}
+            disabled={markChatMessagesAsReadLoading}
+            className="bg-blue-200 p-2 rounded-md text-white hover:bg-blue-300"
+          >
             Read
           </button>
         </div>
