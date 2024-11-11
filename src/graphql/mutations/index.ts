@@ -23,6 +23,7 @@ export * from './Chat/AddChatAdmin';
 export * from './Chat/RemoveChatAdmin';
 export * from './Chat/RemoveChatParticipant';
 export * from './Chat/AddChatParticipant';
+export * from "./Chat/UpdateChatName"
 
 //COMPANY
 export * from './Company/RespondToJoinRequest';

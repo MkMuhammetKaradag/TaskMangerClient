@@ -1,5 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import CloseButton from '../Common/CloseButton';
+import { gql, useMutation } from '@apollo/client';
+import { GET_USER_CHATS } from '../../../graphql/queries';
+import { UPDATE_CHAT_NAME } from '../../../graphql/mutations';
 
 interface ChatSettingProps {
   onClose: () => void;
@@ -7,12 +10,41 @@ interface ChatSettingProps {
   chatName: string | null;
   isAdmin: boolean;
 }
+
 const ChatSettingModal: FC<ChatSettingProps> = ({
   chatId,
   onClose,
   chatName,
   isAdmin,
 }) => {
+  const [chatNameInput, setChatNameInput] = useState('');
+  const [updateChatName, { loading: updateChatNameLoading }] = useMutation(
+    UPDATE_CHAT_NAME,
+    {
+      refetchQueries: [
+        {
+          query: GET_USER_CHATS,
+        },
+      ],
+    }
+  );
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChatNameInput(e.target.value);
+  };
+
+  const handleChangeChatName = async () => {
+    try {
+      await updateChatName({
+        variables: { chatId, name: chatNameInput },
+      });
+
+      alert('Chat name updated successfully');
+      setChatNameInput('');
+    } catch (error) {
+      console.error('Error updating chat name:', error);
+    }
+  };
+
   return (
     <div
       onClick={onClose}
@@ -27,14 +59,36 @@ const ChatSettingModal: FC<ChatSettingProps> = ({
           {chatName ? chatName : 'Chat'} Setting
         </h2>
         {isAdmin && (
-          <div>
-            <div>close chat</div>
-            <div>chat moderator father</div>
+          <div className="mt-2">
+            <div className="border-b p-3 hover:bg-blue-300  hover:cursor-pointer text-white bg-blue-200 rounded-md shadow-lg my-3  flex  items-center  justify-center">
+              Freeze Chat
+            </div>
+            <div className="border-b p-3   flex  items-center  justify-center ">
+              <input
+                type="text"
+                placeholder={chatName || 'chat'}
+                value={chatNameInput}
+                onChange={handleInputChange}
+                className="w-80 p-2  border  rounded-l-md shadow-lg"
+              />
+
+              <button
+                onClick={handleChangeChatName}
+                disabled={chatNameInput.length === 0 || updateChatNameLoading}
+                className={`${
+                  chatNameInput.length === 0 ? 'bg-blue-200' : 'bg-blue-400'
+                } text-white p-2 rounded-r-md shadow-lg`}
+              >
+                change
+              </button>
+            </div>
           </div>
         )}
-        <div>
-          <div>users</div>
+        <div className="border-b p-3  gap-x-3  flex  items-center  justify-center">
           <div>Mark all messages as read </div>
+          <button className="bg-blue-200 p-2 rounded-md text-white hover:bg-blue-300 ">
+            Read
+          </button>
         </div>
       </div>
     </div>
