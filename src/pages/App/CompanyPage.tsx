@@ -29,6 +29,7 @@ interface Company {
 interface CompanyQueryResponse {
   getCompanyByUser: {
     company: Company;
+    isCompanyEmploye: boolean;
     showCompanyjoinButton: boolean;
     isJoinRequest: boolean;
   };
@@ -46,6 +47,7 @@ const GET_COMPANY = gql`
         createdAt
         updatedAt
       }
+      isCompanyEmploye
       showCompanyjoinButton
       isJoinRequest
     }
@@ -123,6 +125,7 @@ const CompanyPage = () => {
   if (!data) return <div>data is null</div>;
   const {
     company: companyData,
+    isCompanyEmploye,
     showCompanyjoinButton,
     isJoinRequest,
   } = data.getCompanyByUser;
@@ -150,7 +153,9 @@ const CompanyPage = () => {
       label: 'Çalışanlar',
       onClick: () => {
         // Kullanıcı yönetimi sayfasına yönlendirme
-        console.log('Kullanıcılar tıklandı');
+        navigate(`/company/employees/${companyId ? companyId : ''}`, {
+          state: { backgroundLocation: location },
+        });
       },
     },
     {
@@ -199,35 +204,36 @@ const CompanyPage = () => {
                 </button>
               )}
 
-              {[UserRole.ADMIN, UserRole.EXECUTIVE].some((role) =>
-                roles?.includes(role)
-              ) && (
-                <div className="relative">
-                  <BsThreeDotsVertical
-                    size={24}
-                    className="text-lg text-gray-500 hover:text-gray-900 hover:cursor-pointer"
-                    onClick={toggleDropdown}
-                  />
-                  {/* Dropdown Menu */}
-                  {isDropdownOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                      {dropdownMenuItems.map((item, index) => (
-                        <div
-                          key={index}
-                          className="px-4 py-3 hover:bg-gray-100 cursor-pointer flex items-center"
-                          onClick={() => {
-                            item.onClick();
-                            setIsDropdownOpen(false);
-                          }}
-                        >
-                          {item.icon}
-                          <span className="text-gray-800">{item.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+              {isCompanyEmploye &&
+                [UserRole.ADMIN, UserRole.EXECUTIVE].some((role) =>
+                  roles?.includes(role)
+                ) && (
+                  <div className="relative">
+                    <BsThreeDotsVertical
+                      size={24}
+                      className="text-lg text-gray-500 hover:text-gray-900 hover:cursor-pointer"
+                      onClick={toggleDropdown}
+                    />
+                    {/* Dropdown Menu */}
+                    {isDropdownOpen && (
+                      <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                        {dropdownMenuItems.map((item, index) => (
+                          <div
+                            key={index}
+                            className="px-4 py-3 hover:bg-gray-100 cursor-pointer flex items-center"
+                            onClick={() => {
+                              item.onClick();
+                              setIsDropdownOpen(false);
+                            }}
+                          >
+                            {item.icon}
+                            <span className="text-gray-800">{item.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
             </div>
 
             {/* Content */}

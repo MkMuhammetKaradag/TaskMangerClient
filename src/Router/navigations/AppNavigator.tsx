@@ -18,6 +18,7 @@ import { useAutoLogout } from '../../hooks/useAutoLogout';
 import CreateChatPage from '../../pages/App/CreateChatPage';
 import CompanyPage from '../../pages/App/CompanyPage';
 import CompanyJoinRequestsPage from '../../pages/App/CompanyJoinRequestsPage';
+import CompanyEmployees from '../../components/App/Company/CompanyEmployees';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -157,6 +158,16 @@ const AppNavigator = () => {
               element={
                 <RoleBasedRoute
                   element={<CompanyJoinRequestsPage />}
+                  allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
+                />
+              }
+            />
+
+            <Route
+              path="/company/employees/:companyId?"
+              element={
+                <RoleBasedRoute
+                  element={<CompanyEmployees />}
                   allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
                 />
               }
