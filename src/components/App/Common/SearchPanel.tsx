@@ -5,6 +5,7 @@ import SlidingPanel from './SlidingPanel';
 import { useLazyQuery } from '@apollo/client';
 
 import { Link } from 'react-router-dom';
+import CompanySearch from '../Company/CompanySearch';
 
 interface SearchPanelProps {
   isOpen: boolean;
@@ -20,7 +21,7 @@ const SearchPanel: React.FC<SearchPanelProps> = ({ isOpen, onClose }) => {
 
   return (
     <SlidingPanel isOpen={isOpen} position="left">
-      <div className="flex  items-center mb-4 border border-gray-700 rounded">
+      {/* <div className="flex  items-center mb-4 border border-gray-700 rounded">
         <input
           type="text"
           placeholder="Ara"
@@ -29,8 +30,9 @@ const SearchPanel: React.FC<SearchPanelProps> = ({ isOpen, onClose }) => {
           className="w-full p-2 bg-gray-900 text-white"
         />
       </div>
-      {/* Arama sonuçları */}
-      <div className="flex-grow  overflow-y-auto"></div>
+ 
+      <div className="flex-grow  overflow-y-auto"></div> */}
+      <CompanySearch></CompanySearch>
     </SlidingPanel>
   );
 };
