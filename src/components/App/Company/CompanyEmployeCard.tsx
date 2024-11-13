@@ -27,6 +27,14 @@ const DEMOTE_FROM_EXECUTIVE = gql`
   }
 `;
 
+const REMOVE_EMPLOYEE = gql`
+  mutation RemoveEmployee($userId: String!) {
+    removeEmployee(userId: $userId) {
+      _id
+    }
+  }
+`;
+
 const CompanyEmployeCard: FC<CompanyEmployeCardProps> = ({
   employee,
   isCurrentUser,
@@ -59,6 +67,18 @@ const CompanyEmployeCard: FC<CompanyEmployeCardProps> = ({
         },
       ],
     });
+
+  const [removeEmployee, { loading: removeEmployeeLoading }] = useMutation(
+    REMOVE_EMPLOYEE,
+    {
+      refetchQueries: [
+        {
+          query: GET_COMPANY_EMPLOYEES,
+          variables: { companyId: companyId || null },
+        },
+      ],
+    }
+  );
   const handleTouchStart = useCallback(() => {
     if (!isAdmin || isCurrentUser) return; // Sadece kendi mesajlarımız için çalışsın
     setIsPressed(true);
@@ -118,6 +138,21 @@ const CompanyEmployeCard: FC<CompanyEmployeCardProps> = ({
     }
   };
 
+  const handleRemoveEmployee = async () => {
+    if (confirm('Are you sure you want to remove this user?')) {
+      try {
+        await removeEmployee({
+          variables: {
+            userId: employee._id,
+          },
+        });
+        console.log('User removed');
+      } catch (error) {
+        console.error('Error removing user:', error);
+      }
+    }
+  };
+
   const dropdownMenuItems = [
     {
       icon: <BiCog className="w-5 h-5 mr-2" />,
@@ -132,10 +167,8 @@ const CompanyEmployeCard: FC<CompanyEmployeCardProps> = ({
     {
       icon: <BiUser className="w-5 h-5 mr-2" />,
       label: 'remove user',
-      onClick: () => {
-        console.log('first click');
-      },
-      disbled: false,
+      onClick: handleRemoveEmployee,
+      disbled: removeEmployeeLoading,
     },
   ];
   return (
