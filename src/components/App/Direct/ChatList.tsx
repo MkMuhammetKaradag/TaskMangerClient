@@ -77,9 +77,9 @@ const ChatList: React.FC = () => {
   }, [data, loading, error, chatId]);
 
   return (
-    <div className="h-[95vh] overflow-y-auto ">
+    <div className="h-[95vh] overflow-y-auto w-full ">
       <div className="border-b flex items-center justify-between px-10">
-        <h2 className="text-xl font-bold p-4 sticky top-0 bg-white z-10 ">
+        <h2 className="text-xl font-bold p-4 sticky top-0 bg-white ">
           Mesajlar
         </h2>
         {userRoles &&

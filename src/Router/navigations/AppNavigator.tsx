@@ -19,11 +19,13 @@ import CreateChatPage from '../../pages/App/CreateChatPage';
 import CompanyPage from '../../pages/App/CompanyPage';
 import CompanyJoinRequestsPage from '../../pages/App/CompanyJoinRequestsPage';
 import CompanyEmployees from '../../components/App/Company/CompanyEmployees';
+import useRoleChangedListener from '../../hooks/useRoleChangedListener';
 
 const AppNavigator = () => {
   const location = useLocation();
   useStatusUpdater();
   useAutoLogout();
+  useRoleChangedListener();
   const state = location.state as { backgroundLocation?: Location };
   return (
     <AppLayout>

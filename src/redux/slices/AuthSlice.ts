@@ -1,6 +1,6 @@
 // slices/AuthSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../types/redux';
+import { User, UserRole } from '../../types/redux';
 
 interface AuthState {
   user: User | null;
@@ -29,6 +29,10 @@ const authSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+
+    changeUserRole: (state, action: PayloadAction<UserRole[]>) => {
+      state.user!.roles = action.payload;
+    },
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
@@ -37,5 +41,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, setLoading, logout, setUpdateUser } = authSlice.actions;
+export const { setUser, setLoading, logout, setUpdateUser, changeUserRole } =
+  authSlice.actions;
 export default authSlice.reducer;

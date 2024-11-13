@@ -52,7 +52,7 @@ const JoinRequests: FC<RequestsProps> = ({ companyId, status }) => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="space-y-4 p-4 flex flex-col ">
+    <div className="space-y-4 p-4 flex flex-col   ">
       <RefreshButton
         onRefresh={refetch}
         loading={loading}

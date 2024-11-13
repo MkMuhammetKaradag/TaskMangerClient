@@ -57,10 +57,12 @@ const CompanyJoinRequestsPage = () => {
       <CloseButton onClick={handleClose} />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="max-w-screen-sm  h-[70vh] p-10  mt-10 md:mt-0 w-full mx-auto bg-white  rounded-lg shadow"
+        className="max-w-screen-sm  h-[70vh] p-10  mt-10 md:mt-0 w-full mx-auto bg-white flex flex-col  rounded-lg shadow"
       >
         <TabBar activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
-        <div className="flex-grow overflow-y-auto">{renderContent()}</div>
+        <div className="flex-grow h-full overflow-y-auto">
+          {renderContent()}
+        </div>
       </div>
     </div>
   );
