@@ -109,6 +109,15 @@ const MENU_ITEMS: MenuItem[] = [
     backgroundLocation: true,
     roles: [UserRole.USER], // Admin, executive ve worker görebilir
   },
+  {
+    icon: FaBuilding,
+    outlineIcon: FaRegBuilding,
+    text: ' company  create  request',
+    link: '/company-request',
+    backgroundLocation: true,
+    roles: [UserRole.ADMIN], // Sadece admin ve executive görebilir
+  },
+
   // {
   //   icon: AiOutlinePlus,
   //   outlineIcon: AiOutlinePlus,

@@ -21,6 +21,7 @@ import CompanyJoinRequestsPage from '../../pages/App/CompanyJoinRequestsPage';
 import CompanyEmployees from '../../components/App/Company/CompanyEmployees';
 import useRoleChangedListener from '../../hooks/useRoleChangedListener';
 import CreateCompany from '../../pages/App/CreateCompany';
+import ManageCompanyRequestsPage from '../../pages/App/ManageCompanyRequestsPage';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -184,6 +185,15 @@ const AppNavigator = () => {
                 <RoleBasedRoute
                   element={<CompanyEmployees />}
                   allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
+                />
+              }
+            />
+            <Route
+              path="/company-request"
+              element={
+                <RoleBasedRoute
+                  element={<ManageCompanyRequestsPage />}
+                  allowedRoles={[UserRole.ADMIN]}
                 />
               }
             />
