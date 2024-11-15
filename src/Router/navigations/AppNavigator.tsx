@@ -20,6 +20,7 @@ import CompanyPage from '../../pages/App/CompanyPage';
 import CompanyJoinRequestsPage from '../../pages/App/CompanyJoinRequestsPage';
 import CompanyEmployees from '../../components/App/Company/CompanyEmployees';
 import useRoleChangedListener from '../../hooks/useRoleChangedListener';
+import CreateCompany from '../../pages/App/CreateCompany';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -135,7 +136,19 @@ const AppNavigator = () => {
                 />
               }
             />
-
+            <Route
+              path="/create-company"
+              element={
+                <RoleBasedRoute
+                  element={<CreateCompany />}
+                  allowedRoles={[
+                    UserRole.USER,
+                    UserRole.EXECUTIVE,
+                    UserRole.ADMIN,
+                  ]}
+                />
+              }
+            />
             <Route
               path="/p/:projectId/:segment"
               element={

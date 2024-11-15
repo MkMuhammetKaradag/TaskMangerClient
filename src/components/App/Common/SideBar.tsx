@@ -101,7 +101,14 @@ const MENU_ITEMS: MenuItem[] = [
     backgroundLocation: true,
     roles: [UserRole.ADMIN, UserRole.EXECUTIVE], // Admin, executive ve worker görebilir
   },
-
+  {
+    icon: AiOutlinePlus,
+    outlineIcon: AiOutlinePlus,
+    text: 'Create company',
+    link: '/create-company',
+    backgroundLocation: true,
+    roles: [UserRole.USER], // Admin, executive ve worker görebilir
+  },
   // {
   //   icon: AiOutlinePlus,
   //   outlineIcon: AiOutlinePlus,
