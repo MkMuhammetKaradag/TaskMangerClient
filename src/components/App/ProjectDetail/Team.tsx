@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { Pie } from 'react-chartjs-2';
-import { BaseUser, TaskDetail } from '../../../types/graphql';
+import { BaseUser, ProjectMember, TaskDetail } from '../../../types/graphql';
 interface TeamProps {
-  team: BaseUser[];
+  team: ProjectMember[];
   tasks: TaskDetail[];
 }
 const Team: FC<TeamProps> = ({ team, tasks }) => {
@@ -42,29 +42,46 @@ const Team: FC<TeamProps> = ({ team, tasks }) => {
         {team.map((member) => {
           const stats = calculateUserTaskStats(member._id, tasks);
           return (
-            <div key={member._id} className="bg-white shadow rounded-lg p-4">
-              <div className="flex items-center mb-4">
-                {member.profilePhoto ? (
-                  <img
-                    src={member.profilePhoto}
-                    alt={`${member.firstName} ${member.lastName}`}
-                    className="w-12 h-12 rounded-full mr-4"
-                  />
-                ) : (
-                  <div className="w-12 h-12 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
-                    <span className="text-xl font-bold text-gray-600">
-                      {member.firstName[0]}
-                      {member.lastName[0]}
-                    </span>
+            <div key={member._id} className=" shadow rounded-lg p-4">
+              <div className="flex w-full    items-center mb-4">
+                <div className="flex ">
+                  {member.profilePhoto ? (
+                    <img
+                      src={member.profilePhoto}
+                      alt={`${member.firstName} ${member.lastName}`}
+                      className="w-12 h-12 rounded-full mr-4 f"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 flex bg-gray-300 rounded-full mr-4 flex items-center justify-center">
+                      <span className="text-xl font-bold text-gray-600">
+                        {member.firstName[0]}
+                        {member.lastName[0]}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col w-full ">
+                  <div className="flex justify-between ">
+                    <h3 className="font-semibold">{`${member.firstName} ${member.lastName}`}</h3>
+                    {!member.belongsToCompany && (
+                      <div className="relative group">
+                        <div className="text-red-500 font-bold text-lg cursor-pointer">
+                          !
+                        </div>
+                        <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block w-max bg-gray-800 text-white text-xs rounded px-2 py-1">
+                          The user does not work for the company
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-                <div>
-                  <h3 className="font-semibold">{`${member.firstName} ${member.lastName}`}</h3>
+
                   <p className="text-sm text-gray-600">
                     Total Tasks: {stats.total}
                   </p>
                 </div>
               </div>
+
               <div className="mt-4">
                 <h4 className="font-semibold mb-2">Task Distribution</h4>
                 <Pie

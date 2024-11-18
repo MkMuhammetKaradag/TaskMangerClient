@@ -20,9 +20,13 @@ export interface TaskSummary {
   doneTasks: number;
 }
 
+export interface ProjectMember extends BaseUser {
+  belongsToCompany: boolean;
+}
+
 export interface ProjectDetail extends Project {
-  projectManager: BaseUser;
-  team: BaseUser[];
+  projectManager: ProjectMember;
+  team: ProjectMember[];
   taskSummary: TaskSummary;
   tasks: TaskDetail[];
 }

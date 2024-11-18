@@ -92,9 +92,15 @@ const ProjectDetailPage: FC = () => {
     { label: 'TaskSummary', value: 'taskSummary' },
   ];
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
       <CloseButton onClick={handleClose} />
-      <div className="max-w-4xl w-full mx-auto h-[80vh] rounded-2xl bg-white overflow-hidden flex flex-col">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="max-w-4xl w-full mx-auto h-[80vh] rounded-2xl bg-white overflow-hidden flex flex-col"
+      >
         <ModalHeader />
         <TabBar activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
         <div className="flex-grow overflow-y-auto">{renderContent()}</div>

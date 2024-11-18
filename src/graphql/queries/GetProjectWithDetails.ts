@@ -13,12 +13,14 @@ export const GET_PROJECT_WITH_DETAILS = gql`
         firstName
         lastName
         profilePhoto
+        belongsToCompany
       }
       team {
         _id
         firstName
         lastName
         profilePhoto
+        belongsToCompany
       }
       taskSummary {
         totalTasks
