@@ -102,6 +102,7 @@ const CompanyPage = () => {
       });
     } catch (error: any) {
       handleGraphQLError(error);
+      // alert('Şirket bulunamadı');
     }
   };
 

@@ -3,6 +3,7 @@ import React from 'react';
 import AppNavigator from './navigations/AppNavigator';
 import AuthNavigator from './navigations/AuthNavigator';
 import { useAppSelector } from '../redux/hooks';
+import { ToastContainer } from 'react-toastify';
 
 const Router = () => {
   const { isAuthenticated, user, isLoading } = useAppSelector(
@@ -14,7 +15,12 @@ const Router = () => {
     return <div>router loading!!!!</div>;
   }
 
-  return <>{isAuthenticated && user ? <AppNavigator /> : <AuthNavigator />}</>;
+  return (
+    <>
+      {isAuthenticated && user ? <AppNavigator /> : <AuthNavigator />}{' '}
+      <ToastContainer />
+    </>
+  );
 };
 
 export default Router;

@@ -243,7 +243,7 @@ const Sidebar: React.FC = () => {
           {isMenuOpen && (
             <div className="absolute bottom-full w-full left-0 bg-gray-800 rounded-t-md shadow-lg">
               <Link
-                to={`/user/${user?._id}`}
+                to={`/profile-setting`}
                 className="block px-4 py-2 hover:bg-gray-700"
                 onClick={toggleMenu}
               >

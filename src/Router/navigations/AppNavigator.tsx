@@ -22,6 +22,8 @@ import CompanyEmployees from '../../components/App/Company/CompanyEmployees';
 import useRoleChangedListener from '../../hooks/useRoleChangedListener';
 import CreateCompany from '../../pages/App/CreateCompany';
 import ManageCompanyRequestsPage from '../../pages/App/ManageCompanyRequestsPage';
+import UserProfileSettingPage from '../../pages/App/UserProfileSettingPage';
+import ProfileEditPage from '../../components/App/UserProfileSetting/UserProfileEdit';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -99,6 +101,45 @@ const AppNavigator = () => {
               element={
                 <RoleBasedRoute
                   element={<ChatPage />}
+                  allowedRoles={[UserRole.USER, UserRole.ADMIN]}
+                />
+              }
+            />
+          </Route>
+
+          <Route
+            path="/profile-setting"
+            element={
+              <RoleBasedRoute
+                element={<UserProfileSettingPage />}
+                allowedRoles={[UserRole.USER]}
+              />
+            }
+          >
+            <Route
+              // path="/"
+              index
+              element={
+                <RoleBasedRoute
+                  element={<ProfileEditPage></ProfileEditPage>}
+                  allowedRoles={[UserRole.USER, UserRole.ADMIN]}
+                />
+              }
+            />
+            <Route
+              path=":profileIdId"
+              element={
+                <RoleBasedRoute
+                  element={<ChatPage />}
+                  allowedRoles={[UserRole.USER, UserRole.ADMIN]}
+                />
+              }
+            />
+            <Route
+              path="company-request"
+              element={
+                <RoleBasedRoute
+                  element={<div>company request</div>}
                   allowedRoles={[UserRole.USER, UserRole.ADMIN]}
                 />
               }

@@ -30,5 +30,9 @@ export * from './Chat/FreezeChat';
 export * from './Company/RespondToJoinRequest';
 export * from './Company/RequestToJoinCompany';
 export * from './Company/CancelJoinCompanyRequest';
-export * from "./Company/ApproveCompanyRequest"
-export * from "./Company/RejectCompanyRequest"
+export * from './Company/ApproveCompanyRequest';
+export * from './Company/RejectCompanyRequest';
+
+//User
+export * from './User/UpdateUser';
+export * from './User/UploadProfilePhoto';

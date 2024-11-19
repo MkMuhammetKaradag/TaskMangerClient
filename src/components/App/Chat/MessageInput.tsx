@@ -64,12 +64,12 @@ interface MessageInputProps {
   chatId: string;
 }
 
-interface SignUrlInput {
+export interface SignUrlInput {
   publicId: string;
   folder: string;
 }
 
-interface SignedUrlData {
+export interface SignedUrlData {
   generateSignedUploadUrl: {
     signature: string;
     timestamp: number;
