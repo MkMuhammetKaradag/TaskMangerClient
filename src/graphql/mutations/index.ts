@@ -15,6 +15,7 @@ export * from './Tasks/CreateTask';
 export * from './Project/CreateProject';
 
 //Chat
+export * from './Chat/CreateChat';
 export * from './Chat/GenerateSignedUploadUrl';
 export * from './Chat/AddMessageToChat';
 export * from './Chat/MarkMessagesAsRead';

@@ -24,6 +24,7 @@ import CreateCompany from '../../pages/App/CreateCompany';
 import ManageCompanyRequestsPage from '../../pages/App/ManageCompanyRequestsPage';
 import UserProfileSettingPage from '../../pages/App/UserProfileSettingPage';
 import ProfileEditPage from '../../components/App/UserProfileSetting/UserProfileEdit';
+import UserPage from '../../pages/App/UserPage';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -106,7 +107,21 @@ const AppNavigator = () => {
               }
             />
           </Route>
-
+          <Route
+            path="/user/:userId?"
+            element={
+              <UserPage />
+              // <RoleBasedRoute
+              //   element={<UserPage />}
+              //   allowedRoles={[
+              //     UserRole.ADMIN,
+              //     UserRole.EXECUTIVE,
+              //     UserRole.WORKER,
+              //     UserRole.USER,
+              //   ]}
+              // />
+            }
+          />
           <Route
             path="/profile-setting"
             element={

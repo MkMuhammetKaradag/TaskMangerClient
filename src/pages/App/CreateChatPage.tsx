@@ -4,14 +4,9 @@ import UserSearch from '../../components/App/CreateChat/UserSearch';
 import CloseButton from '../../components/App/Common/CloseButton';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { GET_USER_CHATS } from '../../graphql/queries';
+import { CREATE_CHAT } from '../../graphql/mutations';
 
-const CREATE_CHAT = gql`
-  mutation CreateChat($input: CreateChatInput!) {
-    createChat(input: $input) {
-      _id
-    }
-  }
-`;
+
 
 interface User {
   _id: string;
