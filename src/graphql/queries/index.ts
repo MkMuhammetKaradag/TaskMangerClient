@@ -9,3 +9,4 @@ export * from './GetUserChats';
 export * from './GetChatMessages';
 export * from './GetMessageReaders';
 export * from './GetCompanyJoinRequests';
+export * from './GetMyCompanyMembershipRequests';

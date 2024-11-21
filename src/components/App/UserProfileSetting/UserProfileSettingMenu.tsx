@@ -35,24 +35,23 @@ const MENU_ITEMS: MenuItem[] = [
     text: 'Setting',
     link: '/profile-setting/setting',
   },
-  {
-    icon: BiSolidSend,
-    outlineIcon: BiSend,
-    text: 'company request',
-    link: '/profile-setting/company-request',
-    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Sadece admin ve executive görebilir
-  },
+  // {
+  //   icon: BiSolidSend,
+  //   outlineIcon: BiSend,
+  //   text: 'company request',
+  //   link: '/profile-setting/company-request',
+  //   roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER],
+  // },
   {
     icon: BiSolidSend,
     outlineIcon: BiSend,
     text: 'my request',
-    link: '/profile-setting',
-    roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER], // Sadece admin ve executive görebilir
+    link: '/profile-setting/company-membership-request',
+    backgroundLocation: true,
+    // roles: [UserRole.ADMIN, UserRole.EXECUTIVE, UserRole.WORKER],
   },
 ];
 const UserProfileSettingMenu = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const location = useLocation();
 
   const user = useAppSelector((state) => state.auth.user);

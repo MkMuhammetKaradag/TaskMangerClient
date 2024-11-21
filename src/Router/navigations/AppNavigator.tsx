@@ -25,6 +25,7 @@ import ManageCompanyRequestsPage from '../../pages/App/ManageCompanyRequestsPage
 import UserProfileSettingPage from '../../pages/App/UserProfileSettingPage';
 import ProfileEditPage from '../../components/App/UserProfileSetting/UserProfileEdit';
 import UserPage from '../../pages/App/UserPage';
+import MyCompanyMembershipRequest from '../../components/App/ProfileSetting/MyCompanyMembershipRequest';
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -150,15 +151,15 @@ const AppNavigator = () => {
                 />
               }
             />
-            <Route
-              path="company-request"
+            {/* <Route
+              path="company-membership-request"
               element={
                 <RoleBasedRoute
-                  element={<div>company request</div>}
+                  element={<MyCompanyMembershipRequest />}
                   allowedRoles={[UserRole.USER, UserRole.ADMIN]}
                 />
               }
-            />
+            /> */}
           </Route>
 
           <Route path="/unauthorized" element={<div>Yetkisiz Erişim</div>} />
@@ -241,6 +242,16 @@ const AppNavigator = () => {
                 <RoleBasedRoute
                   element={<CompanyEmployees />}
                   allowedRoles={[UserRole.EXECUTIVE, UserRole.ADMIN]}
+                />
+              }
+            />
+
+            <Route
+              path="/profile-setting/company-membership-request"
+              element={
+                <RoleBasedRoute
+                  element={<MyCompanyMembershipRequest />}
+                  allowedRoles={[UserRole.USER, UserRole.ADMIN]}
                 />
               }
             />

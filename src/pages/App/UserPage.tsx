@@ -109,7 +109,7 @@ const ProfileHeder: FC<ProfileHeder> = ({
         {userId === _id ? (
           <div>
             <Link to={`/profile-setting`}>
-              <FiSettings />
+              <FiSettings size={24} className="hover:cursor-pointer" />
             </Link>
           </div>
         ) : chatId ? (
@@ -195,7 +195,9 @@ const UserPage: React.FC = () => {
             {userProfile.company && (
               <div>
                 <h2 className="text-lg font-medium text-gray-700">Company:</h2>
-                <p className="text-gray-600">{userProfile.company.name}</p>
+                <Link to={`/company/${userProfile.company._id}`}>
+                  <p className="text-gray-600">{userProfile.company.name}</p>
+                </Link>
               </div>
             )}
           </div>

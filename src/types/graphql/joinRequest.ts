@@ -4,6 +4,7 @@ export enum JoinRequestStatus {
   APPROVED = 'APPROVED',
   PENDING = 'PENDING',
   REJECTED = 'REJECTED',
+  CANCELED = 'CANCELED',
 }
 export type JoinRequest = {
   _id: string;
@@ -11,4 +12,8 @@ export type JoinRequest = {
   createdAt: string;
   updatedAt: string;
   user: User;
+  company: {
+    _id: string;
+    name: string;
+  };
 };
