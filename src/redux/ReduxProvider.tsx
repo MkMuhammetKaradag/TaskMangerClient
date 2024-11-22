@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { useQuery } from '@apollo/client';
 import AuthReducer from './slices/AuthSlice';
+import PipReducer from './slices/PipSlice';
 import { GET_ME } from '../graphql/queries';
 
 const Loading = () => (
@@ -30,6 +31,7 @@ const ReduxProvider: React.FC<ReduxProviderProps> = ({ children }) => {
     return configureStore({
       reducer: {
         auth: AuthReducer,
+        pip: PipReducer,
       },
       preloadedState: {
         auth: {
