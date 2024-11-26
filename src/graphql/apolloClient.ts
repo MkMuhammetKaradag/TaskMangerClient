@@ -9,10 +9,16 @@ loadDevMessages();
 loadErrorMessages();
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:3000/graphql',
+  uri: 'ws://localhost:3000/graphql', // 'wss://taskmangerserver.onrender.com/graphql',
+  options: {
+    reconnect: true,
+    connectionParams: {
+      credentials: 'include', // Çerez gönderimi
+    },
+  },
 });
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: 'http://localhost:3000/graphql', //'https://taskmangerserver.onrender.com/graphql',
   credentials: 'include',
   headers: {
     'apollo-require-preflight': 'true',
@@ -25,7 +31,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
-      // console.log(extensions);
+      console.log(extensions);
     });
 
     if (networkError) {

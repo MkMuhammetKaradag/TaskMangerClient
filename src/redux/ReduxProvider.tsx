@@ -17,7 +17,11 @@ interface ReduxProviderProps {
 }
 
 const ReduxProvider: React.FC<ReduxProviderProps> = ({ children }) => {
-  const { data, loading } = useQuery(GET_ME);
+  const { data, loading } = useQuery(GET_ME, {
+    onError(error) {
+      console.error('redux get me error', error);
+    },
+  });
   const [showLoading, setShowLoading] = useState(true);
 
   useEffect(() => {

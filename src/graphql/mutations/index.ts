@@ -26,6 +26,8 @@ export * from './Chat/RemoveChatParticipant';
 export * from './Chat/AddChatParticipant';
 export * from './Chat/UpdateChatName';
 export * from './Chat/FreezeChat';
+export * from './Chat/GenerateToken';
+export * from './Chat/CreateMeeting';
 
 //COMPANY
 export * from './Company/RespondToJoinRequest';
@@ -37,3 +39,6 @@ export * from './Company/RejectCompanyRequest';
 //User
 export * from './User/UpdateUser';
 export * from './User/UploadProfilePhoto';
+
+export * from './VideoCall/JoinVideoRoom';
+export * from './VideoCall/VideoCallStart';

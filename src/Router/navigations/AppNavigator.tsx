@@ -1,4 +1,10 @@
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import HomePage from '../../pages/App/HomePage';
 import RoleBasedRoute from './RoleBasedRoute';
 import TasksPage from '../../pages/App/TasksPage';
@@ -26,6 +32,98 @@ import UserProfileSettingPage from '../../pages/App/UserProfileSettingPage';
 import ProfileEditPage from '../../components/App/UserProfileSetting/UserProfileEdit';
 import UserPage from '../../pages/App/UserPage';
 import MyCompanyMembershipRequest from '../../components/App/ProfileSetting/MyCompanyMembershipRequest';
+import { toast } from 'react-toastify';
+import { useEffect, useRef } from 'react';
+import { useAppSelector } from '../../redux/hooks';
+import { useSubscription } from '@apollo/client';
+import { VIDEO_CALL_STARTED } from '../../graphql/subscriptions';
+import VideoCallPage from '../../pages/App/VideoCallPage';
+
+interface VideoCallStartedNotification {
+  userName: string;
+  chatId: string;
+}
+
+const IncomingCallListener = () => {
+  const user = useAppSelector((s) => s.auth.user);
+  const { data } = useSubscription(VIDEO_CALL_STARTED, {
+    variables: {
+      userId: user?._id,
+    },
+  });
+
+  const navigate = useNavigate();
+  const location = useLocation(); // Mevcut konumu al
+  const timerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (data?.videoCallStarted) {
+      const { userName, chatId } =
+        data.videoCallStarted as VideoCallStartedNotification;
+
+      const toastId = toast.info(
+        <div className="p-2 ">
+          <div>Incoming call from {userName}</div>
+          <div>
+            <button
+              className="bg-green-400 p-3 hover:bg-green-500"
+              onClick={() => handleAcceptCall(chatId)}
+            >
+              Accept
+            </button>
+            <button
+              className="bg-red-400 p-3 hover:bg-red-500"
+              onClick={() => handleRejectCall()}
+            >
+              Reject
+            </button>
+          </div>
+        </div>,
+        {
+          position: 'top-right',
+          autoClose: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
+
+      timerRef.current = setTimeout(() => {
+        handleRejectCall();
+        toast.dismiss(toastId);
+      }, 10000);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [data]);
+
+  const handleAcceptCall = (chatId: string) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    // Ses çalmayı durdur
+
+    navigate(`/call/${chatId}`, {
+      state: { backgroundLocation: location }, // Mevcut konumu backgroundLocation olarak gönder
+    });
+    toast.dismiss();
+    // Örneğin: history.push(`/chat/${chatId}`);
+  };
+
+  const handleRejectCall = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    toast.dismiss();
+  };
+
+  return null; // Bu bileşen herhangi bir UI render etmez
+};
 
 const AppNavigator = () => {
   const location = useLocation();
@@ -36,6 +134,7 @@ const AppNavigator = () => {
   return (
     <AppLayout>
       <>
+        <IncomingCallListener />
         <Routes location={state?.backgroundLocation || location}>
           <Route path="/" element={<HomePage />} />
           <Route
@@ -167,6 +266,10 @@ const AppNavigator = () => {
         </Routes>
         {state?.backgroundLocation && (
           <Routes>
+            <Route
+              path="/call/:chatId"
+              element={<VideoCallPage></VideoCallPage>}
+            />
             <Route
               path="/create-chat"
               element={

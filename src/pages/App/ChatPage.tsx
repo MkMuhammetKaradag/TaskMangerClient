@@ -1,11 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdVideoCall } from 'react-icons/md';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Messages from '../../components/App/Chat/Messages';
 import MessageInput from '../../components/App/Chat/MessageInput';
 import { BiCog, BiLinkAlt, BiUser } from 'react-icons/bi';
-import { LEAVE_CHAT_MUTATION } from '../../graphql/mutations';
+import {
+  CREATE_MEETING,
+  GENERATE_TOKEN,
+  LEAVE_CHAT_MUTATION,
+  START_VIDEO_CALL,
+} from '../../graphql/mutations';
 import { useMutation } from '@apollo/client';
 import { GET_USER_CHATS } from '../../graphql/queries';
 import ChatSettingModal from '../../components/App/Chat/ChatSettingModal';
@@ -17,7 +28,15 @@ import {
   setPiPMode,
   setPosition,
 } from '../../redux/slices/PipSlice';
-
+import {
+  MeetingProvider,
+  MeetingConsumer,
+  useMeeting,
+  useParticipant,
+} from '@videosdk.live/react-sdk';
+import ReactPlayer from 'react-player';
+import MeetingModal from '../../components/App/Chat/MeetingModal';
+import { toast } from 'react-toastify';
 interface LocationState {
   chatName: string | null;
   isAdmin: boolean;
@@ -25,6 +44,7 @@ interface LocationState {
 
 const ChatPage = () => {
   const { chatId } = useParams<{ chatId: string }>();
+  const [initiateVideoCall] = useMutation(START_VIDEO_CALL);
   const location = useLocation();
   const dispatch = useAppDispatch();
   const { isPiP, position } = useAppSelector((state) => state.pip);
@@ -87,7 +107,14 @@ const ChatPage = () => {
   if (!chatId) {
     return <div className="text-center p-4">Sohbet bulunamadı</div>;
   }
-
+  const handleVideoCallInitiation = async () => {
+    try {
+      await initiateVideoCall({ variables: { chatId } });
+      toast.success('video cal started');
+    } catch (error) {
+      toast.error('Görüntülü arama başlatılamadı');
+    }
+  };
   return (
     <div
       ref={containerRef}
@@ -105,6 +132,7 @@ const ChatPage = () => {
     >
       <div className="flex flex-col h-full bg-gray-50">
         <ChatHeader
+          onVideoCallStart={handleVideoCallInitiation}
           containerRef={containerRef}
           chatId={chatId}
           chatName={chatName}
@@ -122,6 +150,7 @@ interface ChatHeaderProps {
   chatName: string | null;
   isAdmin: boolean;
   containerRef: React.RefObject<HTMLDivElement>;
+  onVideoCallStart: () => Promise<void>;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
@@ -129,11 +158,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   chatName,
   isAdmin,
   containerRef,
+  onVideoCallStart,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null); // New state to control active modal
   const dispatch = useAppDispatch();
   const { isPiP, position } = useAppSelector((state) => state.pip);
+
   const handlePiPToggle = () => {
     const newPiPState = !isPiP;
     dispatch(setPiPMode(newPiPState));
@@ -152,6 +183,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
     refetchQueries: [{ query: GET_USER_CHATS }],
   });
   const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
@@ -240,11 +272,16 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
             </svg>
           )}
         </button>
-
-        <MdVideoCall
-          className="cursor-pointer text-blue-600 hover:text-blue-800"
-          size={30}
-        />
+        <Link
+          to={`/call/${chatId}`}
+          onClick={onVideoCallStart}
+          state={{ backgroundLocation: location }}
+        >
+          <MdVideoCall
+            className="cursor-pointer text-blue-600 hover:text-blue-800"
+            size={30}
+          />
+        </Link>
         <div onClick={(e) => e.stopPropagation()} className="relative">
           <BsThreeDotsVertical
             className="cursor-pointer"
@@ -291,6 +328,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
       )}
       {activeModal === 'addParticipant' && (
         <AddParticipantModal onClose={closeModal} chatId={chatId} />
+      )}
+      {activeModal === 'meeting' && (
+        <MeetingModal onClose={closeModal} chatId={chatId} />
       )}
     </div>
   );
