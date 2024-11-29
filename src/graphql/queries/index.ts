@@ -10,3 +10,4 @@ export * from './GetChatMessages';
 export * from './GetMessageReaders';
 export * from './GetCompanyJoinRequests';
 export * from './GetMyCompanyMembershipRequests';
+export * from './GetNotifications';

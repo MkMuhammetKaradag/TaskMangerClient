@@ -23,6 +23,7 @@ import SearchPanel from './SearchPanel';
 import { UserRole } from '../../../types/redux';
 import { IoChatbubbles, IoChatbubblesOutline } from 'react-icons/io5';
 import { FaBuilding, FaRegBuilding } from 'react-icons/fa';
+import NotificationPanel from './NotificationPanel';
 
 // Types
 interface MenuItem {
@@ -132,6 +133,7 @@ const Sidebar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const location = useLocation();
 
   // Hooks
@@ -160,6 +162,10 @@ const Sidebar: React.FC = () => {
     setIsExpanded((prev) => !prev);
     setIsSearchOpen((prev) => !prev);
   };
+  const toggleNotification = () => {
+    setIsNotificationOpen((prev) => !prev);
+    // setIsSearchOpen(false);
+  };
 
   // Kullanıcının rolüne göre menü öğelerini filtreleme
   const filteredMenuItems = MENU_ITEMS.filter((item) => {
@@ -179,6 +185,18 @@ const Sidebar: React.FC = () => {
     if (item.text === 'Ara') {
       return (
         <button key={index} onClick={toggleSearch} className={commonClasses}>
+          <IconComponent className="text-2xl min-w-[1.5rem]" />
+          {renderMenuText(item.text)}
+        </button>
+      );
+    }
+    if (item.text === 'Notification') {
+      return (
+        <button
+          key={index}
+          onClick={toggleNotification}
+          className={commonClasses}
+        >
           <IconComponent className="text-2xl min-w-[1.5rem]" />
           {renderMenuText(item.text)}
         </button>
@@ -265,7 +283,10 @@ const Sidebar: React.FC = () => {
 
       {/* Search Panel */}
       <SearchPanel isOpen={isSearchOpen} onClose={toggleSearch} />
-
+      <NotificationPanel
+        isOpen={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+      />
       {/* Mobile Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-black text-white p-2 z-50 flex justify-around md:hidden">
         {filteredMenuItems.slice(0, 5).map((item, index) => (

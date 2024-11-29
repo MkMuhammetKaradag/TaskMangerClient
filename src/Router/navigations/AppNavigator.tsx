@@ -57,6 +57,7 @@ const IncomingCallListener = () => {
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
+    console.log(data);
     if (data?.videoCallStarted) {
       const { userName, chatId } =
         data.videoCallStarted as VideoCallStartedNotification;

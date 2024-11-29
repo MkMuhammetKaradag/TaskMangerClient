@@ -42,3 +42,6 @@ export * from './User/UploadProfilePhoto';
 
 export * from './VideoCall/JoinVideoRoom';
 export * from './VideoCall/VideoCallStart';
+
+//NOTIFICATION
+export * from './Notification/MarkNotificationAsRead';
