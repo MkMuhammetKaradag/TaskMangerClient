@@ -34,6 +34,7 @@ export enum NotificationType {
   PROJECT = 'PROJECT',
   COMPANY = 'COMPANY',
   DIRECT_MESSAGE = 'DIRECT_MESSAGE',
+  VIDEO_CALL = 'VIDEO_CALL',
 }
 
 // Conditional type to determine the content type based on contentType

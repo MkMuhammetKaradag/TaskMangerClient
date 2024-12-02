@@ -12,6 +12,7 @@ import {
 import { GET_NOTIFICATIONS } from '../../../graphql/queries';
 import { MARK_NOTIFICATION_AS_READ } from '../../../graphql/mutations';
 import { NEW_NOTIFICATION_SUBSCRIPTION } from '../../../graphql/subscriptions/NewNotification';
+import NotificationLink from './NotificationLink';
 
 interface NotificationPanelProps {
   isOpen: boolean;
@@ -28,7 +29,16 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
 }) => {
   const { data, loading, error, subscribeToMore } = useQuery(GET_NOTIFICATIONS);
   const [notifications, setNotifications] = useState<NotificationArray>([]);
-  const [markNotificationAsRead] = useMutation(MARK_NOTIFICATION_AS_READ);
+  const [markNotificationAsRead] = useMutation(MARK_NOTIFICATION_AS_READ, {
+    refetchQueries(result) {
+      return [
+        {
+          query: GET_NOTIFICATIONS,
+          // variables: { userId: result.data.user.id },
+        },
+      ];
+    },
+  });
   const location = useLocation();
   const [activeFilter, setActiveFilter] = useState<NotificationType | 'ALL'>(
     'ALL'
@@ -143,17 +153,17 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
   };
 
   const renderNotification = useCallback(
-    (notification: AnyNotification, isGrouped: boolean = false) => (
-      <div key={notification._id} className="flex items-center mb-2">
+    (notification: AnyNotification, isGrouped: boolean = false, to = '/') => (
+      <div key={notification._id} className="flex items-center  mb-2  ">
         <img
           src={
             notification.sender.profilePhoto || 'https://via.placeholder.com/40'
           }
           alt="User"
-          className="w-10 h-10 rounded-full mr-2 object-cover"
+          className="w-10 h-10  mr-2 rounded-full  object-cover aspect-square"
         />
         <div>
-          <Link to={`/user/${notification.sender._id}`}>
+          <Link to={`/`}>
             <p
               className={`font-bold ${
                 notification.isRead ? 'text-gray-400' : 'text-white'
@@ -162,18 +172,38 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
               {notification.sender.userName}
             </p>
           </Link>
-          <Link
-            to={`${
-              notification.type !== NotificationType.DIRECT_MESSAGE
-                ? '/p/' + notification.content._id
-                : '/direct/'
-            }`}
+          <NotificationLink
+            notification={notification}
+            isGrouped={isGrouped}
+            markGroupAsRead={markGroupAsRead}
+          />
+          {/* <Link
+            to={(() => {
+              switch (notification.type) {
+                case NotificationType.TASK:
+                  return `/task/${notification.content._id}`;
+                case NotificationType.PROJECT:
+                  return `/project/${notification.content._id}/tasks`;
+                case NotificationType.COMPANY:
+                  return `/company`;
+                case NotificationType.DIRECT_MESSAGE:
+                  return `/direct`;
+                case NotificationType.VIDEO_CALL:
+                  return `/direct`;
+                default:
+                  return '/';
+              }
+            })()}
             state={
-              notification.type !== NotificationType.DIRECT_MESSAGE
+              notification.type == NotificationType.TASK
                 ? { backgroundLocation: location }
                 : undefined
             }
             onClick={() => {
+              if (notification.isRead) {
+                return null;
+              }
+
               if (isGrouped) {
                 markGroupAsRead(`dm_${notification.content._id}`);
               } else if (!notification.isRead) {
@@ -190,7 +220,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
             >
               {notification.message}
             </p>
-          </Link>
+          </Link> */}
         </div>
       </div>
     ),
@@ -202,13 +232,25 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
       if (notifications[0].type === NotificationType.DIRECT_MESSAGE) {
         const latestNotification = notifications[0];
         const unreadCount = notifications.filter((n) => !n.isRead).length;
+
+        const getNotificationRoute = () => {
+          const routeMap: Record<NotificationType, string> = {
+            [NotificationType.TASK]: `/task/${latestNotification.content._id}`,
+            [NotificationType.PROJECT]: `/project/${latestNotification.content._id}/tasks`,
+            [NotificationType.COMPANY]: `/company`,
+            [NotificationType.DIRECT_MESSAGE]: `/direct`,
+            [NotificationType.VIDEO_CALL]: `/direct`,
+          };
+
+          return routeMap[latestNotification.type] || '/';
+        };
         return (
           <div key={key} className="mb-4 p-2 border rounded">
             <h3 className="font-bold mb-2">
               Mesajlar ({notifications.length})
               {unreadCount > 0 && (
                 <span className="ml-2 text-red-500">
-                  ({unreadCount} okunmamış)
+                  ({unreadCount} unread)
                 </span>
               )}
             </h3>
@@ -216,7 +258,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
           </div>
         );
       } else {
-        return renderNotification(notifications[0]);
+        return renderNotification(notifications[0], false);
       }
     });
   }, [groupedNotifications, renderNotification]);
@@ -255,6 +297,12 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
               Companies
+            </button>
+            <button
+              onClick={() => handleFilterChange(NotificationType.VIDEO_CALL)}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+            >
+              Video Call
             </button>
             <button
               onClick={() => handleFilterChange(NotificationType.PROJECT)}
