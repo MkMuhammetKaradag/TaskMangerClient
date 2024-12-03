@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { GET_ALL_TASKS_BY_PROJECT } from '../../graphql/queries';
 import {
   ProjectDetail,
-  Project as ProjectType,
   Task,
 } from '../../types/graphql';
 

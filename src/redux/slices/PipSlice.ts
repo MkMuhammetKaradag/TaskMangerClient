@@ -1,4 +1,3 @@
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Position {
@@ -36,7 +35,7 @@ const pipSlice = createSlice({
     setMinimized: (state, action: PayloadAction<boolean>) => {
       state.minimized = action.payload;
     },
-    resetPiP: (state) => {
+    resetPiP: () => {
       return initialState;
     },
   },

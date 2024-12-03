@@ -1,13 +1,13 @@
-import { gql, useMutation } from '@apollo/client';
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { BiCog, BiLinkAlt, BiUser } from 'react-icons/bi';
+import {  useMutation } from '@apollo/client';
+import  { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { BiCog,  BiUser } from 'react-icons/bi';
 import { GET_CHAT_USERS } from './ChatUsersModal';
 import {
   ADD_CHAT_ADMIN,
   REMOVE_CHAT_ADMIN,
   REMOVE_CHAT_PARTICIPANT,
 } from '../../../graphql/mutations';
-import { GET_USER_CHATS } from '../../../graphql/queries';
+
 
 
 interface ChatUserCardProps {

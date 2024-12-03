@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import  {  useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CloseButton from '../../components/App/Common/CloseButton';
 import TabBar from '../../components/App/ProjectDetail/TabBar';
-import JoinRequests from '../../components/App/CompanyJoinRequests/JoinRequests';
-import { JoinRequestStatus } from '../../types/graphql/joinRequest';
+
 import CreateRequests from '../../components/App/CompanyRequest/CreateRequests';
 import { CompanyRequestStatus } from '../../types/graphql/CompanyRequest';
 

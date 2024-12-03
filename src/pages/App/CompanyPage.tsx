@@ -1,5 +1,5 @@
-import { ApolloError, gql, useMutation, useQuery } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import { useState } from 'react';
 import {
   BiCalendar,
   BiCog,
@@ -15,7 +15,7 @@ import { useAppSelector } from '../../redux/hooks';
 import { UserRole } from '../../types/redux';
 import { REQUEST_TO_JOIN_COMPANY } from '../../graphql/mutations/Company/RequestToJoinCompany';
 import { CANCEL_JOIN_COMPANY_REQUEST } from '../../graphql/mutations';
-import { GET_COMPANY_USERS } from '../../graphql/queries';
+import { GET_COMPANY } from '../../graphql/queries';
 
 interface Company {
   _id: string;
@@ -35,24 +35,6 @@ interface CompanyQueryResponse {
   };
 }
 
-const GET_COMPANY = gql`
-  query getCompanyByUser($companyId: String) {
-    getCompanyByUser(companyId: $companyId) {
-      company {
-        _id
-        name
-        address
-        phoneNumber
-        website
-        createdAt
-        updatedAt
-      }
-      isCompanyEmploye
-      showCompanyjoinButton
-      isJoinRequest
-    }
-  }
-`;
 const handleGraphQLError = (error: any) => {
   if (error.graphQLErrors?.length > 0) {
     alert(error.graphQLErrors[0].message);
@@ -76,19 +58,17 @@ const CompanyPage = () => {
     variables: { companyId },
   });
 
-  const [
-    requestToJoinCompany,
-    { loading: loadingJoinMutation, error: errorJoinMutation },
-  ] = useMutation(REQUEST_TO_JOIN_COMPANY, {
-    refetchQueries: [{ query: GET_COMPANY, variables: { companyId } }],
-  });
+  const [requestToJoinCompany, { loading: loadingJoinMutation }] = useMutation(
+    REQUEST_TO_JOIN_COMPANY,
+    {
+      refetchQueries: [{ query: GET_COMPANY, variables: { companyId } }],
+    }
+  );
 
-  const [
-    cancelJoinCompanyRequest,
-    { loading: loadingCancelMutation, error: errorCancelMutation },
-  ] = useMutation(CANCEL_JOIN_COMPANY_REQUEST, {
-    refetchQueries: [{ query: GET_COMPANY, variables: { companyId } }],
-  });
+  const [cancelJoinCompanyRequest, { loading: loadingCancelMutation }] =
+    useMutation(CANCEL_JOIN_COMPANY_REQUEST, {
+      refetchQueries: [{ query: GET_COMPANY, variables: { companyId } }],
+    });
 
   const handleJoinCompany = async () => {
     try {
@@ -121,9 +101,9 @@ const CompanyPage = () => {
     }
   };
 
-  if (loading) return <div>Yükleniyor...</div>;
-  if (error) return <div>Hata: {error.message}</div>;
-  if (!data) return <div>data is null</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!data) return <div>Result is not found</div>;
   const {
     company: companyData,
     isCompanyEmploye,
@@ -143,7 +123,7 @@ const CompanyPage = () => {
   const dropdownMenuItems = [
     {
       icon: <BiCog className="w-5 h-5 mr-2" />,
-      label: 'Ayarlar',
+      label: 'Setting',
       onClick: () => {
         // Ayarlar sayfasına yönlendirme veya modal açma
         console.log('Ayarlar tıklandı');
@@ -151,7 +131,7 @@ const CompanyPage = () => {
     },
     {
       icon: <BiUser className="w-5 h-5 mr-2" />,
-      label: 'Çalışanlar',
+      label: 'Employees',
       onClick: () => {
         // Kullanıcı yönetimi sayfasına yönlendirme
         navigate(`/company/employees/${companyId ? companyId : ''}`, {
@@ -161,7 +141,7 @@ const CompanyPage = () => {
     },
     {
       icon: <BiLinkAlt className="w-5 h-5 mr-2" />,
-      label: 'Şirket Katılma İstekleri',
+      label: 'Company Join Requests',
       onClick: () => {
         // Katılma istekleri sayfasına yönlendirme
         navigate('/company/join-requests', {
@@ -175,7 +155,7 @@ const CompanyPage = () => {
     <div onClick={() => setIsDropdownOpen(false)}>
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8">
-          Şirket Bilgileri
+          Company Information
         </h1>
         {companyData && (
           <div
@@ -242,7 +222,7 @@ const CompanyPage = () => {
                   <BiMapPin className="w-5 h-5 text-blue-500" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Adres</p>
+                  <p className="text-sm font-medium text-gray-500">Address</p>
                   <p className="text-gray-900 mt-1">
                     {companyData.address || 'Empty'}
                   </p>
@@ -255,7 +235,7 @@ const CompanyPage = () => {
                   <BiPhone className="w-5 h-5 text-blue-500" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Telefon</p>
+                  <p className="text-sm font-medium text-gray-500">Telephone</p>
                   <p className="text-gray-900 mt-1">
                     {companyData.phoneNumber || 'Empty'}
                   </p>
@@ -290,7 +270,7 @@ const CompanyPage = () => {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">
-                        Oluşturulma Tarihi
+                        Creation Date
                       </p>
                       <p className="text-gray-900 mt-1">
                         {formatDate(companyData.createdAt)}
@@ -305,7 +285,7 @@ const CompanyPage = () => {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">
-                        Son Güncelleme
+                        Last Update
                       </p>
                       <p className="text-gray-900 mt-1">
                         {formatDate(companyData.updatedAt)}

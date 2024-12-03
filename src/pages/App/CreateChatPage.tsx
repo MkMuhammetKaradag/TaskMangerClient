@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import {  useMutation } from '@apollo/client';
 import UserSearch from '../../components/App/CreateChat/UserSearch';
 import CloseButton from '../../components/App/Common/CloseButton';
 import { useLocation, useNavigate } from 'react-router-dom';

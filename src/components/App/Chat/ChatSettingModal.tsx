@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import CloseButton from '../Common/CloseButton';
-import { gql, useMutation } from '@apollo/client';
+import {  useMutation } from '@apollo/client';
 import { GET_USER_CHATS } from '../../../graphql/queries';
 import { FREEZE_CHAT, UPDATE_CHAT_NAME } from '../../../graphql/mutations';
 import { useNavigate } from 'react-router-dom';

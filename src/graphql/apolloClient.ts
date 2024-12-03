@@ -9,7 +9,7 @@ loadDevMessages();
 loadErrorMessages();
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:3000/graphql', //, 'wss://taskmangerserver.onrender.com/graphql' ,
+  uri: 'wss://taskmangerserver.onrender.com/graphql', //'ws://localhost:3000/graphql', //, 'wss://taskmangerserver.onrender.com/graphql' ,
   options: {
     reconnect: true,
     connectionParams: {
@@ -18,7 +18,7 @@ const wsLink = new WebSocketLink({
   },
 });
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3000/graphql', // 'https://taskmangerserver.onrender.com/graphql',
+  uri: 'https://taskmangerserver.onrender.com/graphql', //'http://localhost:3000/graphql', // ,
   credentials: 'include',
   headers: {
     'apollo-require-preflight': 'true',
@@ -57,7 +57,7 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         getMessages: {
-          merge(existing, incoming) {
+          merge(_, incoming) {
             return incoming;
           },
         },

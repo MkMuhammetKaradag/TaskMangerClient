@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import  { FC } from 'react';
 import CloseButton from '../Common/CloseButton';
 import { gql, useQuery } from '@apollo/client';
 import ChatUserCard from './ChatUserCard';

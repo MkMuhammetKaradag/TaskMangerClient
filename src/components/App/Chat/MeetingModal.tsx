@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import  { FC, useEffect, useMemo, useState } from 'react';
 
 import CloseButton from '../Common/CloseButton';
 import { useMutation } from '@apollo/client';
@@ -76,7 +76,7 @@ const MeetingModal: FC<MeetingModalProps> = ({ chatId, onClose }) => {
             token={token}
           >
             <MeetingView
-              meetingId={meetingId}
+             
               onMeetingLeave={onMeetingLeave}
             />
           </MeetingProvider>
@@ -94,7 +94,7 @@ const MeetingModal: FC<MeetingModalProps> = ({ chatId, onClose }) => {
 };
 
 function ParticipantView({ participantId }: { participantId: string }) {
-  const { webcamStream, micStream, webcamOn, micOn, isLocal } =
+  const { webcamStream, webcamOn, isLocal } =
     useParticipant(participantId);
 
   const videoStream = useMemo(() => {
@@ -138,10 +138,9 @@ function Controls() {
 
 function MeetingView({
   onMeetingLeave,
-  meetingId,
 }: {
   onMeetingLeave: () => void;
-  meetingId: string;
+
 }) {
   const { participants, join } = useMeeting({
     onMeetingLeft: onMeetingLeave,

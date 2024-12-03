@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { useAppSelector } from '../../redux/hooks';
-import { FiMessageSquare, FiSettings } from 'react-icons/fi';
+import { FiSettings } from 'react-icons/fi';
 import { IoChatbubbles, IoChatbubblesOutline } from 'react-icons/io5';
 import { CREATE_CHAT } from '../../graphql/mutations';
 import { gql, useMutation, useQuery } from '@apollo/client';
@@ -61,7 +61,7 @@ const ProfileHeder: FC<ProfileHeder> = ({
 }) => {
   const userId = useAppSelector((s) => s.auth.user?._id);
   const navigate = useNavigate();
-  const [createChat, { data, loading, error }] = useMutation(CREATE_CHAT, {
+  const [createChat, { loading }] = useMutation(CREATE_CHAT, {
     onCompleted: (data) => {
       console.log(data);
       navigate(`/direct/t/${data.createChat._id}`);

@@ -12,8 +12,6 @@ import {
   OnEdgesChange,
   NodeTypes,
   MarkerType,
-  OnConnect,
-  addEdge,
   Connection,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -55,8 +53,7 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks, isPermission }) => {
   const [removeParentTask, { loading: removeParentTaskLoading }] =
     useMutation(REMOVE_PARENT_TASK);
 
-  const [updateTaskHierarchy, { loading: updateTaskHierarchyLoading }] =
-    useMutation(UPDATE_TASK_HIERARCHY);
+  const [updateTaskHierarchy] = useMutation(UPDATE_TASK_HIERARCHY);
 
   const onRemoveParentTask = async (taskId: string) => {
     try {
@@ -188,7 +185,7 @@ const TaskDiagram: React.FC<TaskDiagramProps> = ({ tasks, isPermission }) => {
 
   // Bağlantı silme işlemi için yeni fonksiyon
   const onEdgeClick = useCallback(
-    async (event: React.MouseEvent, edge: Edge) => {
+    async (_: React.MouseEvent, edge: Edge) => {
       if (edge.source == 'project') {
         alert(
           'Proje parent task pahlantısı yok  silinemez sadece değiştirile bilr'

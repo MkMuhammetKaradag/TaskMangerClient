@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { User, UserRole } from '../../../types/redux';
 import { BiCog, BiUser } from 'react-icons/bi';
 import { gql, useMutation } from '@apollo/client';
@@ -58,15 +58,14 @@ const CompanyEmployeCard: FC<CompanyEmployeCardProps> = ({
       ],
     });
 
-  const [demoteFromExecutive, { loading: demoteFromExecutiveLoading }] =
-    useMutation(DEMOTE_FROM_EXECUTIVE, {
-      refetchQueries: [
-        {
-          query: GET_COMPANY_EMPLOYEES,
-          variables: { companyId: companyId || null },
-        },
-      ],
-    });
+  const [demoteFromExecutive] = useMutation(DEMOTE_FROM_EXECUTIVE, {
+    refetchQueries: [
+      {
+        query: GET_COMPANY_EMPLOYEES,
+        variables: { companyId: companyId || null },
+      },
+    ],
+  });
 
   const [removeEmployee, { loading: removeEmployeeLoading }] = useMutation(
     REMOVE_EMPLOYEE,

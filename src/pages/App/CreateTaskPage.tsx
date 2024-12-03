@@ -1,4 +1,3 @@
-import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -62,8 +61,9 @@ const CreateTaskPage = () => {
   const { data: usersData, loading: usersLoading } =
     useQuery<GetCompanyUsersQueryResult>(GET_COMPANY_USERS);
 
-  const { data: projectsData, loading: projectsLoading } =
-    useQuery<GetProjectsByCompanyQueryResult>(GET_PROJECTS_BY_COMPANY);
+  const { data: projectsData } = useQuery<GetProjectsByCompanyQueryResult>(
+    GET_PROJECTS_BY_COMPANY
+  );
 
   const [createTask, { loading: mutationLoading }] = useMutation<
     CreateTaskMutationResult,

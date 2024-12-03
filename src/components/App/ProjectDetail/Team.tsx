@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import  { FC } from 'react';
 import { Pie } from 'react-chartjs-2';
-import { BaseUser, ProjectMember, TaskDetail } from '../../../types/graphql';
+import {  ProjectMember, TaskDetail } from '../../../types/graphql';
 interface TeamProps {
   team: ProjectMember[];
   tasks: TaskDetail[];

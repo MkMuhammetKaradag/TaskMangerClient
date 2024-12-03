@@ -1,19 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { gql, useLazyQuery } from '@apollo/client';
+import {  useLazyQuery } from '@apollo/client';
 import { debounce } from 'lodash';
 import { useNavigate } from 'react-router-dom';
-const SEARCH_COMPANIES = gql`
-  query searchCompanies($input: SearchCompaniesInput!) {
-    searchCompanies(input: $input) {
-      companies {
-        _id
-        name
-        phoneNumber
-      }
-      totalCount
-    }
-  }
-`;
+import { SEARCH_COMPANIES } from '../../../graphql/queries';
 
 interface Company {
   _id: string;
@@ -101,14 +90,12 @@ const CompanySearch: React.FC = () => {
         onChange={handleInputChange}
         className=" w-full bg-slate-800 p-2   border  rounded-md shadow-lg"
       />
-      {loading && <p>Yükleniyor...</p>}
+      {loading && <p>Loading...</p>}
 
       {searchQuery.trim().length < 3 ? (
-        <p className="text-gray-500">
-          Arama yapmak için en az 3 karakter girin
-        </p>
+        <p className="text-gray-500">Enter at least 3 characters to search</p>
       ) : loading ? (
-        <p>Aranıyor...</p>
+        <p>Wanted...</p>
       ) : data && data.searchCompanies.companies ? (
         <>
           {data.searchCompanies.companies.map((company: Company) => (
@@ -136,7 +123,7 @@ const CompanySearch: React.FC = () => {
           </div>
         </>
       ) : (
-        <span>Sonuç bulunamadı</span>
+        <span>No results found</span>
       )}
     </div>
   );

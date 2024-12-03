@@ -6,7 +6,7 @@ import ChatParticipantCard from './ChatParticipantCard';
 import { useAppSelector } from '../../../redux/hooks';
 import { UserRole } from '../../../types/redux';
 import { FaPlus } from 'react-icons/fa';
-import { boolean } from 'zod';
+
 
 interface Participant {
   _id: string;

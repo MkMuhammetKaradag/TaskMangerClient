@@ -1,4 +1,3 @@
-import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -37,10 +36,8 @@ type CompanyFormData = z.infer<typeof companySchema>;
 const CreateCompany = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [
-    createCompanyRequest,
-    { loading: createCompanyRequestLoading, error },
-  ] = useMutation(CREATE_COMPANY_REQUEST);
+  const [createCompanyRequest, { loading: createCompanyRequestLoading }] =
+    useMutation(CREATE_COMPANY_REQUEST);
 
   const {
     register,

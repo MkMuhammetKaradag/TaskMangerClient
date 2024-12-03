@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useState } from 'react';
@@ -34,14 +34,13 @@ type ProfileEditSchema = z.infer<typeof formSchema>;
 const ProfileEditPage = () => {
   const [profileEditError, setProfileEditError] = useState<string | null>(null);
   const user = useAppSelector((s) => s.auth.user);
-  const [updateUserProfile, { loading }] = useMutation(UPDATE_USER_PROFILE);
+  const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE);
   const dispatch = useAppDispatch();
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
+
     watch,
   } = useForm<ProfileEditSchema>({
     resolver: zodResolver(formSchema),
@@ -114,38 +113,13 @@ const ProfileEditPage = () => {
           error={errors.lastName?.message}
         />
 
-        {/* <div className="flex bg-gray-100 rounded-md p-3  justify-between">
-          <label>Hesap Gizli:</label>
-          <Controller
-            control={control}
-            name="isPrivate"
-            defaultValue={user?.isPrivate}
-            render={({ field: { onChange, value } }) => (
-              <button
-                type="button"
-                onClick={() => onChange(!value)} // Checkbox toggle işlevi
-                className={`relative w-12 h-6 transition duration-200 ease-linear rounded-full ${
-                  value ? 'bg-blue-600' : 'bg-gray-600'
-                }`}
-              >
-                <span
-                  className={`absolute left-0 top-0 m-1 w-4 h-4 bg-white rounded-full shadow-md transform transition ${
-                    value ? 'translate-x-6' : 'translate-x-0'
-                  }`}
-                ></span>
-              </button>
-            )}
-          />
-          {errors.isPrivate && <p>{errors.isPrivate.message}</p>}
-        </div> */}
-
         <FormError error={profileEditError}></FormError>
 
         <SubmitButton
           isValid={!!isFormValid}
           isSubmitting={isSubmitting}
           isLoading={false}
-          label="Gönder"
+          label="Send"
         />
       </form>
     </div>

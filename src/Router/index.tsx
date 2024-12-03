@@ -1,5 +1,5 @@
 // Router.tsx
-import React from 'react';
+
 import AppNavigator from './navigations/AppNavigator';
 import AuthNavigator from './navigations/AuthNavigator';
 import { useAppSelector } from '../redux/hooks';

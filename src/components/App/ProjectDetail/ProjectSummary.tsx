@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import  { FC } from 'react';
 import { BaseUser, ProjectStatus } from '../../../types/graphql';
 interface ProjectSummaryProps {
   name: string;

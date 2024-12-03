@@ -1,16 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client';
-import React, { FC } from 'react';
-import { CompanyRequestStatus } from '../../../types/graphql/CompanyRequest';
-import { AiOutlineClose } from 'react-icons/ai';
+import { FC } from 'react';
+
 import RefreshButton from '../CompanyJoinRequests/RefreshButton';
 import {
   JoinRequest,
   JoinRequestStatus,
 } from '../../../types/graphql/joinRequest';
-import {
-  GET_COMPANY_JOIN_REQUESTS,
-  GET_MY_COMPANY_MEMBERSHIP_REQUESTS,
-} from '../../../graphql/queries';
+import { GET_MY_COMPANY_MEMBERSHIP_REQUESTS } from '../../../graphql/queries';
 import { CANCEL_JOIN_COMPANY_REQUEST } from '../../../graphql/mutations';
 import { toast } from 'react-toastify';
 interface ManageMyJoinRequestsProps {
@@ -27,14 +23,12 @@ const ManageMyMembershipRequests: FC<ManageMyJoinRequestsProps> = ({
     }
   );
 
-  const [
-    cancelJoinCompanyRequest,
-    { loading: loadingCancelMutation, error: errorCancelMutation },
-  ] = useMutation(CANCEL_JOIN_COMPANY_REQUEST, {
-    refetchQueries: [
-      { query: GET_MY_COMPANY_MEMBERSHIP_REQUESTS, variables: { status } },
-    ],
-  });
+  const [cancelJoinCompanyRequest, { loading: loadingCancelMutation }] =
+    useMutation(CANCEL_JOIN_COMPANY_REQUEST, {
+      refetchQueries: [
+        { query: GET_MY_COMPANY_MEMBERSHIP_REQUESTS, variables: { status } },
+      ],
+    });
 
   const handleCanceledRequest = async (companyId: string) => {
     try {

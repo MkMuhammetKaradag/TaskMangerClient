@@ -37,7 +37,7 @@ const NotificationLink: React.FC<{
     MarkNotificationAsReadResponse,
     MarkNotificationAsReadInput
   >(MARK_NOTIFICATION_AS_READ, {
-    refetchQueries(result) {
+    refetchQueries() {
       return [
         {
           query: GET_NOTIFICATIONS,

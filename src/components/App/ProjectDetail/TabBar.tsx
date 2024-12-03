@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import Tab from './Tab';
-import { visit } from 'graphql';
+
 
 const TabBar: FC<{
   activeTab: string;

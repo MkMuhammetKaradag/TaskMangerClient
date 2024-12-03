@@ -1,5 +1,3 @@
-import { User, UserRole } from '../redux';
-
 export interface Company {
   _id: string;
   name: string;

@@ -1,16 +1,11 @@
-import React, { FC } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useAppSelector } from '../../../redux/hooks';
-import { useQuery } from '@apollo/client';
+import  { FC } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { TaskDetail } from '../../../types/graphql';
-import { GET_TASK } from '../../../graphql/queries';
+
 import { formatDate } from '../../../utils/formatDate';
-import { BiCalendar, BiFolder, BiUser } from 'react-icons/bi';
-import {
-  getTaskPriorityColor,
-  getTaskStatusColor,
-} from '../../../utils/status';
-import TaskHeader from './TaskHeader';
+import { BiCalendar, BiUser } from 'react-icons/bi';
+
 
 interface TaskInfoProps {
   taskData: TaskDetail;

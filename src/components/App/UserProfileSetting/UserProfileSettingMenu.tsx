@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+
 import { IconType } from 'react-icons';
 import { UserRole } from '../../../types/redux';
-import { BsPencilSquare } from 'react-icons/bs';
+
 import { MdEdit, MdOutlineEdit } from 'react-icons/md';
 import {
   AiFillSetting,
-  AiOutlineSend,
+
   AiOutlineSetting,
-  AiOutlineUser,
+
 } from 'react-icons/ai';
 import { BiSend, BiSolidSend } from 'react-icons/bi';
 import { Link, useLocation } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { useApolloClient } from '@apollo/client';
+import {  useAppSelector } from '../../../redux/hooks';
+
 interface MenuItem {
   icon: IconType;
   outlineIcon: IconType;

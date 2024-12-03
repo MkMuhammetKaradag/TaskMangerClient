@@ -16,7 +16,7 @@ const formSchema = z.object({
 });
 
 type ForgotPasswordSchema = z.infer<typeof formSchema>;
-const ForgotPassword: FC<ForgotPasswordProps> = ({ setActiveState }) => {
+const ForgotPassword: FC<ForgotPasswordProps> = () => {
   const [forgotPassword] = useMutation(FORGOT_PASSWORD);
   const {
     register,

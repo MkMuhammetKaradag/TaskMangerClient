@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
-import { RefinementCtx, z } from 'zod';
+import { FC } from 'react';
+import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { TaskDetail, TaskPriority, TaskStatus } from '../../../types/graphql';
 import { User } from '../../../types/redux';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_COMPANY_USERS, GET_TASK } from '../../../graphql/queries';
-import { CREATE_TASK } from '../../../graphql/mutations';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   FormError,
@@ -78,7 +78,6 @@ const TaskUpdateForm: FC<TaskUpdateFormProps> = ({ taskData }) => {
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
-    reset,
   } = useForm<TaskFormData>({
     resolver: zodResolver(
       TaskSchema(new Date(+taskData.dueDate).toLocaleDateString('en-CA'))
@@ -93,8 +92,6 @@ const TaskUpdateForm: FC<TaskUpdateFormProps> = ({ taskData }) => {
     },
   });
   const onSubmit = async (data: TaskFormData) => {
-
-
     try {
       await updateTask({
         variables: {

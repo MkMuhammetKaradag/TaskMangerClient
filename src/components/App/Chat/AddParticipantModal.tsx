@@ -1,8 +1,8 @@
-import React, { FC, useState } from 'react';
+import  { FC, useState } from 'react';
 
 import CloseButton from '../Common/CloseButton';
 import UserSearch from '../CreateChat/UserSearch';
-import { gql, useMutation } from '@apollo/client';
+import {  useMutation } from '@apollo/client';
 import { GET_CHAT_USERS } from './ChatUsersModal';
 import { ADD_CHAT_PARTICIPANT } from '../../../graphql/mutations';
 

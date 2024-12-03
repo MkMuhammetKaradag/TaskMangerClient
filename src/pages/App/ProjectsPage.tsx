@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_PROJECTS_BY_COMPANY } from '../../graphql/queries';
-import { Project, ProjectStatus } from '../../types/graphql';
+import { Project } from '../../types/graphql';
 import { useNavigate } from 'react-router-dom';
 import ProjectCard from '../../components/App/Projects/ProjectCard';
 

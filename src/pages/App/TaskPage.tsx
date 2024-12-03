@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from 'react';
-import { BiCalendar, BiFolder, BiUser } from 'react-icons/bi';
+
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { TaskDetail } from '../../types/graphql';
-import { getTaskPriorityColor, getTaskStatusColor } from '../../utils/status';
+
 import { useQuery } from '@apollo/client';
 import { GET_TASK } from '../../graphql/queries';
 import CloseButton from '../../components/App/Common/CloseButton';
-import { formatDate } from '../../utils/formatDate';
+
 import { useAppSelector } from '../../redux/hooks';
 import TaskInfo from '../../components/App/Task/TaskInfo';
 import TaskHeader from '../../components/App/Task/TaskHeader';

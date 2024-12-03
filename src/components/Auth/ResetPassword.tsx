@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,7 +37,7 @@ const ResetPassword: FC<ResetPasswordProps> = ({ setActiveState, token }) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
+
     watch,
   } = useForm<ResetPasswordSchema>({
     resolver: zodResolver(formSchema),

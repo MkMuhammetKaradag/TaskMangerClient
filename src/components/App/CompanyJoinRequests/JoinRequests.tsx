@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_COMPANY_JOIN_REQUESTS } from '../../../graphql/queries';
 import {
@@ -8,7 +8,7 @@ import {
 import { FaCheck } from 'react-icons/fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import { RESPOND_TO_JOIN_REQUEST } from '../../../graphql/mutations';
-import { MdRefresh } from 'react-icons/md';
+
 import RefreshButton from './RefreshButton';
 
 interface RequestsProps {
@@ -23,17 +23,14 @@ const JoinRequests: FC<RequestsProps> = ({ companyId, status }) => {
     }
   );
 
-  const [RespondToJoinRequest, { error: RESPONDeRROR }] = useMutation(
-    RESPOND_TO_JOIN_REQUEST,
-    {
-      refetchQueries: [
-        {
-          query: GET_COMPANY_JOIN_REQUESTS,
-          variables: { status, companyId },
-        },
-      ],
-    }
-  );
+  const [RespondToJoinRequest] = useMutation(RESPOND_TO_JOIN_REQUEST, {
+    refetchQueries: [
+      {
+        query: GET_COMPANY_JOIN_REQUESTS,
+        variables: { status, companyId },
+      },
+    ],
+  });
 
   const handleRespondToJoinRequest = (requestId: string, approve: boolean) => {
     try {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  {  useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CloseButton from '../../components/App/Common/CloseButton';
 import TabBar from '../../components/App/ProjectDetail/TabBar';

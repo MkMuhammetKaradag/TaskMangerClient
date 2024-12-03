@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 export const CustomTaskNode: React.FC<{
   data: { title: string; task: Task };
-}> = ({ data: { task, title } }) => {
+}> = ({ data: { task } }) => {
   const navigate = useNavigate();
   const location = useLocation();
   return (

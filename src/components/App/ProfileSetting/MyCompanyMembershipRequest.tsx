@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import CreateRequests from '../CompanyRequest/CreateRequests';
-import { CompanyRequestStatus } from '../../../types/graphql/CompanyRequest';
+import  {  useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 
 import TabBar from '../ProjectDetail/TabBar';
 import CloseButton from '../Common/CloseButton';

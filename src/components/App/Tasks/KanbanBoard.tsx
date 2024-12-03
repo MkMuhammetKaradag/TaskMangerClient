@@ -32,7 +32,7 @@ interface UpdateTaskStatusVariables {
 export const KanbanBoard = ({ initialTasks }: { initialTasks: Task[] }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [updateTaskStatus, { loading }] = useMutation<
+  const [updateTaskStatus] = useMutation<
     UpdateTaskStatusMutationResult,
     UpdateTaskStatusVariables
   >(UPDATE_TASK_STATUS);

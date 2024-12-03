@@ -1,8 +1,8 @@
 import { gql, useSubscription, useLazyQuery } from '@apollo/client';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../redux/hooks';
-import { changeUserRole, setUser } from '../redux/slices/AuthSlice';
-import { User, UserRole } from '../types/redux';
+import { changeUserRole } from '../redux/slices/AuthSlice';
+import { User } from '../types/redux';
 import { GET_ME } from '../graphql/queries';
 
 const ROLE_CHANGED_SUBSCRIPTION = gql`
@@ -18,8 +18,7 @@ const useRoleChangedListener = () => {
   const { data: subscriptionData, error } = useSubscription(
     ROLE_CHANGED_SUBSCRIPTION
   );
-  const [getMe, { data: userData, loading: userLoading, error: userError }] =
-    useLazyQuery(GET_ME);
+  const [getMe, { data: userData, error: userError }] = useLazyQuery(GET_ME);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

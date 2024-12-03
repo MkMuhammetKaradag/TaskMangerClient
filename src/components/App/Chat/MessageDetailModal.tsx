@@ -2,7 +2,7 @@ import React from 'react';
 import CloseButton from '../Common/CloseButton';
 import { GET_MESSAGE_READERS } from '../../../graphql/queries';
 import { useQuery } from '@apollo/client';
-import { Message, MessageReaders } from '../../../types/graphql/message';
+import {  MessageReaders } from '../../../types/graphql/message';
 
 interface MessageDetailModalProps {
   onClose: () => void;

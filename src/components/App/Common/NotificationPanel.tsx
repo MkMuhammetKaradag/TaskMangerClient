@@ -23,14 +23,11 @@ interface GroupedNotifications {
   [key: string]: AnyNotification[];
 }
 
-const NotificationPanel: React.FC<NotificationPanelProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const NotificationPanel: React.FC<NotificationPanelProps> = ({ isOpen }) => {
   const { data, loading, error, subscribeToMore } = useQuery(GET_NOTIFICATIONS);
   const [notifications, setNotifications] = useState<NotificationArray>([]);
   const [markNotificationAsRead] = useMutation(MARK_NOTIFICATION_AS_READ, {
-    refetchQueries(result) {
+    refetchQueries() {
       return [
         {
           query: GET_NOTIFICATIONS,
@@ -153,7 +150,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
   };
 
   const renderNotification = useCallback(
-    (notification: AnyNotification, isGrouped: boolean = false, to = '/') => (
+    (notification: AnyNotification, isGrouped: boolean = false) => (
       <div key={notification._id} className="flex items-center  mb-2  ">
         <img
           src={
@@ -233,17 +230,6 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
         const latestNotification = notifications[0];
         const unreadCount = notifications.filter((n) => !n.isRead).length;
 
-        const getNotificationRoute = () => {
-          const routeMap: Record<NotificationType, string> = {
-            [NotificationType.TASK]: `/task/${latestNotification.content._id}`,
-            [NotificationType.PROJECT]: `/project/${latestNotification.content._id}/tasks`,
-            [NotificationType.COMPANY]: `/company`,
-            [NotificationType.DIRECT_MESSAGE]: `/direct`,
-            [NotificationType.VIDEO_CALL]: `/direct`,
-          };
-
-          return routeMap[latestNotification.type] || '/';
-        };
         return (
           <div key={key} className="mb-4 p-2 border rounded">
             <h3 className="font-bold mb-2">
@@ -268,7 +254,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
 
   return (
     <SlidingPanel isOpen={isOpen} position="right">
-      <h2 className="text-xl font-bold">Bildirimler</h2>
+      <h2 className="text-xl font-bold">Notifications</h2>
       <div className="relative  flex justify-end">
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}

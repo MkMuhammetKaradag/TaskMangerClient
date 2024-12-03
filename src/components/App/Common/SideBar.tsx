@@ -7,9 +7,7 @@ import {
   AiOutlineHome,
   AiFillProject,
   AiOutlineProject,
-  AiFillShop,
-  AiOutlineShop,
-  AiFillBell,
+
   AiOutlineBell,
   AiOutlinePlus,
 } from 'react-icons/ai';
@@ -40,13 +38,13 @@ const MENU_ITEMS: MenuItem[] = [
   {
     icon: AiFillHome,
     outlineIcon: AiOutlineHome,
-    text: 'Ana Sayfa',
+    text: 'Home Page',
     link: '/',
   },
   {
     icon: AiOutlineSearch,
     outlineIcon: AiOutlineSearch,
-    text: 'Ara',
+    text: 'Search',
     link: 'search',
   },
   {
@@ -182,7 +180,7 @@ const Sidebar: React.FC = () => {
       isActive ? 'text-white' : 'text-gray-300'
     } hover:bg-gray-900`;
 
-    if (item.text === 'Ara') {
+    if (item.text === 'Search') {
       return (
         <button key={index} onClick={toggleSearch} className={commonClasses}>
           <IconComponent className="text-2xl min-w-[1.5rem]" />
